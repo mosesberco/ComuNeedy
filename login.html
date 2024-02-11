@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create User</title>
+    <style>
+        body {
+            background-color: #3498db; 
+            color: #fff; /* White text color */
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        form {
+            background-color: #3855b6; 
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #3498db; 
+            color: #fff; 
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<form id="userForm">
+    <label for="First_name">First Name:</label>
+    <input type="text" id="First_name" name="First_name" required><br>
+
+    <label for="Last_name">Last Name:</label>
+    <input type="text" id="Last_name" name="Last_name" required><br>
+
+    <label for="Email">Email:</label>
+    <input type="email" id="Email" name="Email" required><br>
+
+    <label for="Password">Password:</label>
+    <input type="password" id="Password" name="Password" required><br>
+
+    <label for="City">City:</label>
+    <input type="text" id="City" name="City"><br>
+
+    <label for="Age">Age:</label>
+    <input type="number" id="Age" name="Age"><br>
+
+    <label for="Proficiency">Proficiency:</label>
+    <input type="text" id="Proficiency" name="Proficiency"><br>
+
+    <label for="Role">Role:</label>
+    <input type="text" id="Role" name="Role"><br>
+
+    <button type="button" onclick="createUser()">Create User</button>
+</form>
+<p id="successMessage" style="display: none; color: green;"></p>
+
+<script>
+    async function createUser() {//async - function that waiting for the server for response and dont do all at once
+        const userForm = document.getElementById('userForm');
+        const formData = new FormData(userForm);
+        const user_json = {};
+        formData.forEach((value, key) => {user_json[key] = value;});
+
+        try {
+            const response = await fetch('http://127.0.0.1:8000/add_user/',//await - waiting for the server to response
+             {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(user_json),
+            });
+
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                alert(`Error: ${errorMessage}`);
+            } else {
+                const result = await response.json();
+                displaySuccessMessage(`Success: ${result.message}`);
+                hideForm();
+            }
+        } 
+        catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        }
+    }
+    function displaySuccessMessage(message) {
+        const successMessageElement = document.getElementById('successMessage');
+        successMessageElement.textContent = message;
+        successMessageElement.style.display = 'block'; // Make the success message visible
+    }
+    function hideForm() {
+        const userForm = document.getElementById('userForm');
+        userForm.style.display = 'none'; // Hide the form
+    }
+</script>
+
+</body>
+</html>
