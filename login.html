@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Roboto+Slab:wght@300&display=swap" rel="stylesheet">
+    <style>
+        body {
+            color: #333;
+            font-family: "Fredoka", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: lighter;
+            font-style: normal;
+            font-variation-settings: "wdth" 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-weight: 700;
+            background: url('./pic/background_main_pic.jpg');
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+        form {
+            background: transparent; 
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            height: 30px;
+            background: #fff;
+            border: none;
+            outline: none;
+            border-radius: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+            cursor: pointer;
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        button:hover {
+            background: #333;
+            color: #fff;
+        }
+        
+        h1 {
+            margin: 0;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #333;
+            font-size: 35px
+        }
+
+        a{
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <form id="userForm">
+        <h1>Login</h1>
+        <label for="Email">Email:</label><br>
+        <input type="email" id="Email" name="Email" required><br>
+
+        <label for="Password">Password:</label><br>
+        <input type="password" id="Password" name="Password" required><br>
+
+        <button type="button" onclick="login()">Login</button><br>
+
+        <button type="button" id="createAccount">Create Account</button><br>
+
+        <a href="./forgotPassword.html">Forgot Password?</a>
+    </form>
+    <p id="successMessage" style="display: none; color: #333;"></p>
+
+    <script>
+        async function login() {
+            const userForm = document.getElementById('userForm');
+            const formData = new FormData(userForm);
+            const user_json = {};
+            formData.forEach((value, key) => {user_json[key] = value})
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/login/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(user_json),
+                });
+
+                if(!response.ok){
+                    const errorMessage = await response.text();
+                    alert(`Error: ${errorMessage}`);
+                }
+                else {
+                    const result = await response.json();
+                    displaySuccessMessage(`Success: ${result.message}`);
+                    hideForm();
+                }
+            } 
+            catch (error) {
+                console.error(`Error:`, error);
+                alert(`An error occurred. Please try again.`);
+            }
+        }
+        function displaySuccessMessage(message) {
+            const successMessageElement = document.getElementById('successMessage');
+            successMessageElement.textContent = message;
+            successMessageElement.style.display = 'block';
+        }
+        function hideForm() {
+        const userForm = document.getElementById('userForm');
+        userForm.style.display = 'none';
+        }
+
+        document.getElementById('createAccount').addEventListener('click', function(){
+            window.location.href = 'createUser.html';
+        });
+
+    </script>
+
+</body>
+</html>

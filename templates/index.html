@@ -4,36 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create User</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Roboto+Slab:wght@300&display=swap" rel="stylesheet">
     <style>
-
         body {
-            color: #333;
-            font-family: "Fredoka", sans-serif;
-            font-optical-sizing: auto;
-            font-weight: lighter;
-            font-style: normal;
-            font-variation-settings: "wdth" 100;
+            background-color: #3498db;
+            color: #fff; /* White text color */
+            font-family: Arial, sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
+            height: 100vh;
             margin: 0;
-            font-weight: 700;
-            background: url('./pic/background_main_pic.jpg');
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
         }
-        
+
         form {
-            background: transparent;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(20px);
+            background-color: #3855b6;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         input {
             width: 100%;
@@ -41,39 +28,18 @@
             margin-bottom: 16px;
             box-sizing: border-box;
         }
-        select {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 16px;
-            box-sizing: border-box;
-        }
         button {
-            width: 100%;
-            height: 30px;
-            background: #fff;
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px;
             border: none;
-            outline: none;
-            border-radius: 40px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+            border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
-            color: #333;
-            font-weight: 600;
-        }
-        button:hover {
-            background: #333;
-            color: #fff;
-        }
-        h1 {
-            margin: 0;
-            margin-bottom: 15px;
-            text-align: center;
-            color: #fff;
-            font-size: 35px
         }
     </style>
 </head>
-<body>
+<body></body>
 
 <form id="userForm">
     <h1>Create An User</h1>
@@ -115,7 +81,6 @@
 
 <script>
     async function createUser() {//async - function that waiting for the server for response and dont do all at once
-        console.log('Button clicked!'); // Add this line for debugging
         const userForm = document.getElementById('userForm');
         const formData = new FormData(userForm);
         const user_json = {};
@@ -158,3 +123,4 @@
 
 </body>
 </html>
+>>>>>>>>> Temporary merge branch 2:createUser.html
