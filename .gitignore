@@ -1,0 +1,4 @@
+new_venv/
+.idea/
+.vscode/
+.pytest_cache/
