@@ -25,7 +25,8 @@ api_app.add_middleware(
     allow_headers=["*"],
 )
 
-DATABASE_URL = "sqlite:///C:/Users/mosheberco/year2/project/New folder/Users.db"
+# adding the relative path
+DATABASE_URL = "sqlite:///Users.db"
 engine_users = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 
 
