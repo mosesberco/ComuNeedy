@@ -1,7 +1,8 @@
-from fastapi import FastAPI,Depends,HTTPException, Body
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, func
+from fastapi import FastAPI, Depends, HTTPException, Body
+from fastapi.responses import JSONResponse
+from sqlalchemy import create_engine, Column, Integer, Boolean, String, DateTime, func
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker,Session
+from sqlalchemy.orm import sessionmaker, Session
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from fastapi.staticfiles import StaticFiles
@@ -15,7 +16,6 @@ api_app = FastAPI(
     templates="templates"  # Specify the location of the templates directory
 )
 
-
 # Allow all origins for demonstration purposes.
 api_app.add_middleware(
     CORSMiddleware,
@@ -25,26 +25,30 @@ api_app.add_middleware(
     allow_headers=["*"],
 )
 
-DATABASE_URL = "sqlite:///C:/Users/mosheberco/year2/project/New folder/Users.db"
-engine_users = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+# C:\Users\udiva\PycharmProjects\ComuNEEDy
+# C:/Users/mosheberco/year2/project/New folder
 
+DATABASE_URL = "sqlite:///C:/Users/udiva/PycharmProjects/ComuNEEDy/ComuNeedy/Users.db"
+engine_users = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 
 Base = declarative_base()
 SessionLocalUsers = sessionmaker(autocommit=False, autoflush=False, bind=engine_users)
+
 
 @asynccontextmanager
 async def lifespan(api_app: FastAPI):
     Base.metadata.create_all(bind=engine_users)
     yield
 
-    
+
 def get_db():
     def dependcy():
-            db = SessionLocalUsers()
-            try:
-                yield db
-            finally:
-                db.close()
+        db = SessionLocalUsers()
+        try:
+            yield db
+        finally:
+            db.close()
+
     return dependcy
 
 
@@ -52,7 +56,7 @@ class User(Base):
     __tablename__ = "Users"
     First_name = Column(String)
     Last_name = Column(String)
-    Email = Column(String,primary_key=True,unique=True,index=True)
+    Email = Column(String, primary_key=True, unique=True, index=True)
     created_at = Column(DateTime, default=func.now())
     Password = Column(String, nullable=True)
     Address = Column(String)
@@ -61,10 +65,12 @@ class User(Base):
     Last_login = Column(DateTime)
     Proficiency = Column(String)
     Role = Column(String, index=True)
+    IsBlocked = Column(Boolean, default=False)
 
 
 def email_in_db(email: str, db: Session):
     return db.query(User).filter(User.Email == email).first() is not None
+
 
 @api_app.post("/add_user")
 async def AddUser(user_data: dict, db: Session = Depends(get_db())):
@@ -88,12 +94,29 @@ async def AddUser(user_data: dict, db: Session = Depends(get_db())):
     db.commit()
     return {"message": "User added successfully"}
 
+
 app = FastAPI(title="main app", lifespan=lifespan)
 html_path = Path(__file__).parent / "index.html"
 app.mount("/api", api_app)
-app.mount("/", StaticFiles(directory="templates",html = True), name="templates")
+app.mount("/", StaticFiles(directory="templates", html=True), name="templates")
 
 
+@api_app.post('/BlockUser')
+def BlockUser(email: str, db: Session = Depends(get_db())):
+    user_to_block = Session.query(User).filter(User.Email == email).first()
+    if user_to_block is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    user_to_block.IsBlocked = True
+    return JSONResponse({'message': 'User Blocked Succesfully !'})
+
+
+@api_app.post('/LogIn')
+def LogIn(user: dict, db: Session = Depends(get_db())):
+    userlogin = Session.query(User).filter(User.Email == user.get("Email")).first()
+    if userlogin is None:
+        raise HTTPException(status_code=404, detail="Sorry, we don't recognize this email.")
+    if userlogin.Password == user.get("Password"):
+        return JSONResponse({'message': 'Logging in...', 'nexturl': '!!!URLHOMEPAGE!!!.html'})
 
 
 if __name__ == '__main__':
