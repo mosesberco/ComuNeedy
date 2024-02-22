@@ -96,7 +96,7 @@ async def AddUser(user_data: dict, db: Session = Depends(get_db())):
 
 
 app = FastAPI(title="main app", lifespan=lifespan)
-html_path = Path(__file__).parent / "index.html"
+html_path = Path(__file__).parent / "login.html"
 app.mount("/api", api_app)
 app.mount("/", StaticFiles(directory="templates", html=True), name="templates")
 
