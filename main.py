@@ -8,6 +8,7 @@ import uvicorn
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 from contextlib import asynccontextmanager
+from fastapi.responses import FileResponse
 
 api_app = FastAPI(
     title="Your FastAPI App",
@@ -96,19 +97,18 @@ async def AddUser(user_data: dict, db: Session = Depends(get_db())):
 
 
 app = FastAPI(title="main app", lifespan=lifespan)
-html_path = Path(__file__).parent / "login.html"
+html_path = Path(__file__).parent / "templates" / "login.html"
 app.mount("/api", api_app)
 app.mount("/", StaticFiles(directory="templates", html=True), name="templates")
 
 
 @api_app.post('/BlockUser')
 def BlockUser(email: str, db: Session = Depends(get_db())):
-    user_to_block = Session.query(User).filter(User.Email == email).first()
+    user_to_block = db.query(User).filter(User.Email == email).first()
     if user_to_block is None:
         raise HTTPException(status_code=404, detail="User not found")
     user_to_block.IsBlocked = True
     return JSONResponse({'message': 'User Blocked Succesfully !'})
-
 
 @api_app.post('/LogIn')
 def LogIn(user: dict, db: Session = Depends(get_db())):
@@ -118,6 +118,9 @@ def LogIn(user: dict, db: Session = Depends(get_db())):
     if userlogin.Password == user.get("Password"):
         return JSONResponse({'message': 'Logging in...', 'nexturl': '!!!URLHOMEPAGE!!!.html'})
 
+@app.get("/login")
+async def read_login():
+    return FileResponse(html_path, media_type="text/html")
 
 if __name__ == '__main__':
     uvicorn.run(app, port=8080, host='0.0.0.0')
