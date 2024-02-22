@@ -112,7 +112,7 @@ def BlockUser(email: str, db: Session = Depends(get_db())):
 
 @api_app.post('/LogIn')
 def LogIn(user: dict, db: Session = Depends(get_db())):
-    userlogin = Session.query(User).filter(User.Email == user.get("Email")).first()
+    userlogin = db.query(User).filter(User.Email == user.get("Email")).first()
     if userlogin is None:
         raise HTTPException(status_code=404, detail="Sorry, we don't recognize this email.")
     if userlogin.Password == user.get("Password"):
