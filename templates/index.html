@@ -81,29 +81,93 @@
             width: 300px;
         }
 
-        
+
+
+        /* Small devices (landscape phones, 576px and up) */
+        @media (max-width: 576px) { 
+            body {
+                font-size: 14px;
+            }
+            .container {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .form {
+                padding: 10px;
+            }
+        }
+
+        /* Medium devices (tablets, 768px and up) */
+        @media (min-width: 768px) {
+            body {
+                font-size: 16px; 
+            }
+        }
+
+        /* Large devices (desktops, 992px and up) */
+        @media (min-width: 992px) { 
+            body {
+                font-size: 18px;
+            }
+        }
+
+        /* Extra large devices (large desktops, 1200px and up) */
+        @media (min-width: 1200px) {
+            body {
+                font-size: 20px;
+            }
+        }
+
+        /* iPad */
+        @media only screen and (min-device-width: 768px) and (max-device-width: 1024px)  {
+            body {
+                font-size: 14px;
+            }
+        }
+
+        /* TV */
+        @media only screen and (min-width: 1920px) {
+            body {
+                font-size: 22px;
+            }  
+            .container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .div1, .div2 {
+                width: calc(50% - 10px);
+            }
+        }
+                
 
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="logo">
+            <img src="./pic/comuneedy_logo.png" alt="logo">
+        </div>
 
-    <img src="./pic/comuneedy_logo.png" alt="logo">
-    
-    <form id="userForm">
-        <h1>Login</h1>
-        <label for="Email">Email:</label><br>
-        <input type="email" id="Email" name="Email" required><br>
+        <div class="form">
+            <form id="userForm">
+                <h1>Login</h1>
+                <label for="Email">Email:</label><br>
+                <input type="email" id="Email" name="Email" required><br>
 
-        <label for="Password">Password:</label><br>
-        <input type="password" id="Password" name="Password" required><br>
+                <label for="Password">Password:</label><br>
+                <input type="password" id="Password" name="Password" required><br>
 
-        <button type="button" onclick="login()">Login</button><br>
+                <button type="button" onclick="login()">Login</button><br>
 
-        <button type="button" id="createAccount">Create Account</button><br>
+                <button type="button" id="createAccount">Create Account</button><br>
 
-        <a href="./forgotPassword.html">Forgot Password?</a>
-    </form>
-    <p id="successMessage" style="display: none; color: #333;"></p>
+                <a href="./forgotPassword.html">Forgot Password?</a>
+            </form>
+        </div>
+        <p id="successMessage" style="display: none; color: #333;"></p>
+    </div>
 
     <script>
         async function login() {
