@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Request</title>
+    <link rel="icon" type="image/x-icon" href="./pic/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Roboto+Slab:wght@300&display=swap" rel="stylesheet">
+
+    <style>
+
+        body {
+            color: #333;
+            font-family: "Fredoka", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: lighter;
+            font-style: normal;
+            font-variation-settings: "wdth" 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-weight: 700;
+            background: url('./pic/background_main_pic.jpg');
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+        #userName, #city {
+            color: #8fc4a7;
+            font-size: 20px;
+        }
+
+        img{
+            width: 300px;
+        }
+
+        form {
+            background: transparent; 
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 300px;
+        }
+
+        h1 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 auto;
+        }
+
+        form > * {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #availabilityFields {
+            margin-bottom: 10px;
+        }
+
+        label {font-weight: bold;}
+
+        input, select, textarea {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 8px;
+        }
+
+        #userName, #city {margin: 0;}
+
+        button {
+            height: 30px;
+            background: #fff;
+            border: none;
+            outline: none;
+            border-radius: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+            cursor: pointer;
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        #addAvailability {
+            width: 30px;
+        }
+
+        #submitRequest {
+            width: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+
+        button:hover {
+            background: #333;
+            color: #fff;
+        }
+
+        @media only screen and (min-width: 1920px) {
+            body {
+                font-size: 22px;
+            }  
+            .container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .logo, .form {
+                width: calc(50% - 10px);
+            }
+            form {
+                width: 100%;
+            }
+            h1 {
+                font-size: 34px;
+                width: 100%;
+            }
+        }
+
+    </style>
+
+</head>
+<body>
+    
+    <div class="container">
+        <div class="logo">
+            <img src="./pic/comuneedy_logo.png" alt="logo">
+        </div>
+
+        <div class="form">
+            <form id="newRequest">
+
+                <h1>Raise A New Request</h1>
+                
+                <label>Name</label>
+                <p id="userName"></p>
+                <label>City</label>
+                <p id="city"></p>
+
+                <label>What is the problem?</label>
+                <textarea id="problem"></textarea>
+
+                <label>Availability</label>
+                <input type="datetime-local"
+                       id="Test_DatetimeLocal"
+                       min="2024-01-01T00:00"
+                       max="2026-12-31T23:59"
+                       step="1">
+                <div id="availabilityFields"></div>
+                <button id="addAvailability">+</button>
+
+                <label>Additional Requests</label>
+                <textarea id="additionalRequests"></textarea>
+
+                <button type="button" id="submitRequest" onclick="submitRequest()">Submit Request</button>
+                                     
+
+            </form>
+        </div>
+        
+    </div>
+
+    <script>
+
+        fetch("/api/user")
+        .then(response => response.json())
+        .then(data => {
+            userName = data.name;
+            userCity = data.city;
+
+            document.getElementById('userName').innerText = userName;
+            document.getElementById('city').innerText = userCity;
+        });
+
+        const addAvailability = document.getElementById('addAvailability');
+        const availabilityFields = document.getElementById('availabilityFields');
+
+        addAvailability.addEventListener('click', (e) => {
+            e.preventDefault();
+            const newDataTime = document.createElement('input');
+            newDataTime.type = 'datetime-local';
+            newDataTime.min = '2024-01-01T00:00';
+            newDataTime.max = '2026-12-31T23:59';
+            newDataTime.step = '1';
+            newDataTime.style.marginBottom = '10px';
+
+            availabilityFields.appendChild(newDataTime);
+        });
+
+
+        async function submitRequest() {
+            
+        }
+
+    </script>
+
+</body>
+</html>
