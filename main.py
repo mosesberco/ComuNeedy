@@ -122,5 +122,15 @@ def LogIn(user: dict, db: Session = Depends(get_db())):
 async def read_login():
     return FileResponse(html_path, media_type="text/html")
 
+#added code by Ariel - Check over it.
+#func to get user's name and city to fetch it in JS.
+@app.get("/api/user")
+def get_user(user: dict, db: Session = Depends(get_db())):
+    return {
+        "name": User.First_name,
+        "city": User.City
+    }
+#until to here...
+
 if __name__ == '__main__':
     uvicorn.run(app, port=8080, host='0.0.0.0')
