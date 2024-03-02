@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ</title>
+    <link rel="icon" type="image/x-icon" href="./pic/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Roboto+Slab:wght@300&display=swap" rel="stylesheet">
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url("./pic/bg.jpg");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .faqs {
+            background: transparent; 
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2)
+        }
+
+        section {
+            min-height: 100vh;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .title {
+            font-size: 2rem;
+            margin: 2rem 0rem;
+            color: #8fc4a7;
+        }
+
+        .faq {
+            width: 1000px;
+            margin-top: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #000000;
+            cursor: pointer;
+        }
+
+        .question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .question h3 {
+            font-size: 1.8rem;
+        }
+
+        .answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 1.4s ease;
+        }
+
+        .answer p {
+            padding-top: 1rem;
+            line-height: 1.6;
+            font-size: 1.4rem;
+        }
+
+        .faq.active .answer {
+            max-height: 300px;
+            max-width: 100%;
+            animation: fade 1s ease-in-out;
+        }
+
+        .faq.active svg {
+            transform: rotate(180deg);
+        }
+
+        svg {
+            transition: transform 0.5s ease-in;
+        }
+
+        @keyframes fade {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0px);
+            }
+        }
+
+        .title-bar {
+            display: flex;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+
+    </style>
+
+</head>
+<body>
+    
+    <section>
+        <div class="faqs">
+            <div class="title-bar">
+                <a href="./MainPage.html"><img src="./pic/comuneedy_logo.png" style="width: 200px;"></a>
+                <h2 class="title">FAQs</h2> 
+            </div>
+        
+            
+            <div class="faq">
+                <div class="question">
+                    <h3>For who is the app for?</h3>
+
+                    <svg width="15" height="10" viewBox="0 0 42 25">
+                        <path d="M3 3L21 21L39 3" stroke="white" stroke-width="7" stroke-linecap="round"/>
+                    </svg>
+
+                </div>
+                <div class="answer">
+                    <p>
+                        In fact, the ComuNeedy application is intended for the entire population, but the application was established mainly because of thinking about helpless people, such as elders, who need basic help in their daily routines. For example, assembling pieces of furniture, changing light bulbs, helping to carry groceries home, etc.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq">
+                <div class="question">
+                    <h3>How does the volunteering functionality work?</h3>
+
+                    <svg width="15" height="10" viewBox="0 0 42 25">
+                        <path d="M3 3L21 21L39 3" stroke="white" stroke-width="7" stroke-linecap="round"/>
+                    </svg>
+
+                </div>
+                <div class="answer">
+                    <p>
+                        It is very simple! 
+                        The user upload a request for help and the request pops up for volunteer users filtered by the city that the request was uploaded.
+                        The volunteer submits the request and gets the user's details to reach a contact with him.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq">
+                <div class="question">
+                    <h3>How can I trust the volunteer</h3>
+
+                    <svg width="15" height="10" viewBox="0 0 42 25">
+                        <path d="M3 3L21 21L39 3" stroke="white" stroke-width="7" stroke-linecap="round"/>
+                    </svg>
+
+                </div>
+                <div class="answer">
+                    <p>
+                        Our system provides rating functionality in addition for verification that one of the admins commits in front of a new volunteer that register to the app. After each volunteering the user gets the option to give a rating for the volunteer. For low and bad feedbacks the volunteer will be blocked from the system.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq">
+                <div class="question">
+                    <h3>Question number 1</h3>
+
+                    <svg width="15" height="10" viewBox="0 0 42 25">
+                        <path d="M3 3L21 21L39 3" stroke="white" stroke-width="7" stroke-linecap="round"/>
+                    </svg>
+
+                </div>
+                <div class="answer">
+                    <p>
+                        hesasad adsasdasfasfa f fadfadfs
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq">
+                <div class="question">
+                    <h3>Question number 1</h3>
+
+                    <svg width="15" height="10" viewBox="0 0 42 25">
+                        <path d="M3 3L21 21L39 3" stroke="white" stroke-width="7" stroke-linecap="round"/>
+                    </svg>
+
+                </div>
+                <div class="answer">
+                    <p>
+                        hesasad adsasdasfasfa f fadfadfs
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </section>
+
+
+
+    <script>
+
+        const faqs = document.querySelectorAll(".faq");
+
+        faqs.forEach((faq) => {
+            faq.addEventListener("click", () => {
+                faq.classList.toggle("active");
+            });
+        });
+
+    </script>
+
+</body>
+</html>

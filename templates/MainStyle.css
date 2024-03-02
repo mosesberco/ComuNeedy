@@ -12,6 +12,11 @@ a {
   text-decoration: none;
 }
 
+.logo {
+  width: 200px;
+  margin-top: 5px;
+}
+
 .header {
   position: fixed;
   height: 80px;
