@@ -1,0 +1,315 @@
+/*Import Google font - Poppins */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swag");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+.header {
+  position: fixed;
+  height: 80px;
+  width: 100%;
+  z-index: 100;
+  padding: 0 20px;
+}
+.nav {
+  max-width: 1800px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.nav,
+.nav_item {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav_logo,
+.nav_link,
+.button {
+  color: #504646;
+}
+.header .media-icons a {
+  font-size: 18px;
+  margin: 0 6px;
+  color: #000;
+}
+.nav_logo {
+  font-size: 25px;
+}
+.nav_item {
+  column-gap: 25px;
+  max-width: 150px;
+}
+.nav_link {
+  color: #504646;
+}
+.nav_link:hover {
+  color: #d9d9d9;
+}
+.button {
+  padding: 6px 24px;
+  border: 2px soild #fff;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.button:active {
+  transform: scale(0.98);
+}
+/* Home */
+.home {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  background-image: url("./pic/bg.jpg");
+  background-size: cover;
+  background-position: center;
+}
+/* Home Section*/
+.home .home-content {
+  height: 100%;
+  width: 75%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.home .text .text-one {
+  font-size: 45px;
+}
+.home .text .text-two {
+  font-size: 45px;
+}
+.home .text .text-three {
+  font-size: 45px;
+}
+.home .button {
+  margin: 10px 0;
+}
+.home .button button {
+  outline: none;
+  color: #fff;
+  padding: 8px 16px;
+  font-weight: 500;
+  font-size: 25px;
+  background: #000;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  transition: all 0.4 ease;
+}
+.home .button button:hover {
+  color: #fff;
+  background-color: #767676;
+  border-color: #d9d9d9;
+}
+
+/* Form */
+.form_container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 101;
+}
+
+/* About Us Section*/
+section .content {
+  width: 80%;
+  margin: 40px auto;
+  font-family: "Poppins", sans-serif;
+}
+section .title {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+section .title span {
+  font-size: 30px;
+  font-weight: 600;
+  padding-bottom: 8px;
+  position: relative;
+}
+section .title span::before,
+section .title span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 5px;
+  width: 110%;
+  background: #000;
+}
+section .title span::after {
+  width: 70%;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -7px;
+}
+.about .about-details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.about .about-details .right {
+  width: 45%;
+}
+.about .about-details .right img {
+  height: 400px;
+  width: 400px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+.about .about-details .left {
+  width: 55%;
+}
+section .topic {
+  font-size: 25px;
+  font-weight: 500;
+  color: #0e2431;
+  margin-bottom: 10px;
+}
+
+.about-details .left p {
+  color: #0e2431;
+  text-align: justify;
+}
+section .button {
+  margin: 10px 0;
+}
+section .button button {
+  outline: none;
+  color: #fff;
+  padding: 8px 16px;
+  font-weight: 500;
+  font-size: 25px;
+  background: #000;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  transition: all 0.4 ease;
+}
+section .button button:hover {
+  color: #fff;
+  background-color: #767676;
+  border-color: #d9d9d9;
+}
+/*Skiils*/
+.skills {
+  background: #f0f8ff;
+}
+.skills .content {
+  padding: 40px 0;
+}
+.skills .skill-details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.skills .skill-details .left {
+  width: 50%;
+}
+.skills .skill-details .left p {
+  color: #0e2431;
+  text-align: justify;
+}
+.skill-details .left .experience {
+  display: flex;
+  align-items: center;
+}
+.skill-details .left .experience .num {
+  font-size: 80px;
+  color: #0e2431;
+  font-weight: 500;
+}
+.skill-details .left .experience .exp {
+  font-size: 18px;
+  color: #0e2431;
+  font-weight: 500;
+}
+.skills .skill-details .boxes {
+  width: 45%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.skills .skill-details .boxes .box {
+  width: calc(100% / 2 - 20px);
+}
+.skill-details .boxes .box .topic {
+  font-size: 20px;
+  font-weight: 500;
+  color: #367038;
+}
+.skill-details .boxes .box .num {
+  font-size: 60px;
+  font-weight: 500;
+  color: #367038;
+}
+
+/* Services & Rules*/
+.services .boxes {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.services .boxes .box {
+  width: calc(100% / 3 - 20px);
+  margin: 20px 0;
+  border-radius: 12px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  padding: 20px 10px;
+}
+.services .boxes .box:hover {
+  background: #367038;
+  color: #fff;
+}
+.services .boxes .box .icon {
+  height: 50px;
+  width: 50px;
+  color: #fff;
+  background: #367038;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 50px;
+  margin: 0 auto 10px auto;
+  transition: all 0.4 ease;
+}
+.services .boxes .box:hover .icon {
+  background: #fff;
+  color: #367038;
+}
+.services .boxes .box:hover .topic {
+  color: #fff;
+}
+
+/* Responsive Media Query CSS*/
+@media (max-width: 1190px) {
+  .about .content {
+    width: 85%;
+  }
+}
+@media (max-width: 1090px) {
+  .about .about-details {
+    flex-direction: column;
+  }
+  .about .about-details .right {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .about .about-details .left {
+    width: 90%;
+    margin: 40px 0;
+  }
+}
+
+/* <link rel="stylesheet" herf="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>*/
