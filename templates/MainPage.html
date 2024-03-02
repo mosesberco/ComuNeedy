@@ -13,7 +13,7 @@
     <!--Header-->
     <header class="header">
       <nav class="nav">
-        <a href="#" class="nav_logo">ComuNeedy</a>
+        <a href="#" class="nav_logo"><img class="logo" src="./pic/comuneedy_logo.png"></a>
 
         <ul class="nav_items">
           <li class="nav_item">
@@ -30,7 +30,7 @@
           <a href="#"><i class="fab fa-instagram"></i></a>
         </div>
 
-        <button class="button">Login</button>
+        <button class="button" id="loginButton">Login</button>
       </nav>
     </header>
 
@@ -152,5 +152,13 @@
             <i class="uil uil-times"></i>
           </div>
         </div>
+
+    <script>
+      const loginButton = document.getElementById("loginButton");
+      loginButton.addEventListener("click", function() {
+        window.location.href = "index.html";
+      });
+
+    </script>
   </body>
 </html>
