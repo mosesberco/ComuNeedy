@@ -296,6 +296,26 @@ section .button button:hover {
   color: #fff;
 }
 
+/* Contact Us*/
+.contact .text {
+  text-align: center;
+  margin: auto;
+  width: 80%;
+}
+
+/*Scroll up button*/
+.scroll-btn i {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 12px;
+  background: #367038;
+  color: #fff;
+  font-size: 18px;
+  border-radius: 6px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
 /* Responsive Media Query CSS*/
 @media (max-width: 1190px) {
   .about .content {

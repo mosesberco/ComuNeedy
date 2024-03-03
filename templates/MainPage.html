@@ -10,8 +10,12 @@
     <link href="MainStyle.css" rel="stylesheet" />
   </head>
   <body>
+     <!--Scroll to up button-->
+     <div class="scroll-btn">
+      <a href="#home"><i class="fas fa-arrow-up"></i></a>
+     </div>
     <!--Header-->
-    <header class="header">
+    <header class="header" id="home">
       <nav class="nav">
         <a href="#" class="nav_logo"><img class="logo" src="./pic/comuneedy_logo.png"></a>
 
@@ -43,7 +47,7 @@
                 <div class = "text-three">Changing Lives.</div>
             </div>
             <div class="button">
-              <button>Join Us Today</button>
+              <a href="./createUser.html"><button>Join Us Today</button></a>
             </div>
           </section>
 
@@ -59,7 +63,7 @@
                  <div class="topic">Helping Is What Make Us Better Comuunity!</div>
                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum aperiam quos molestias fuga, culpa dolore facilis corrupti maxime distinctio atque nobis vero doloribus blanditiis porro officia pariatur itaque voluptatem exercitationem.</p>
                  <div class="button">
-                    <button>Join Us Today</button>
+                  <a href="./createUser.html"><button>Join Us Today</button></a>
                    </div>
                  </div>
                </div>
@@ -148,6 +152,19 @@
     </div>
   </div>
 </section>
+<!--Another Section Of Contact Us-->
+<section class="contact" id="contact">
+  <div class="content">
+    <div class="title"><span>Contact Us</span></div>
+    <div class="text">
+      <div class="topic">Have Any Idea?</div>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut explicabo culpa vitae earum, porro fuga at ad quis nulla nemo laudantium aliquam accusamus quidem expedita inventore adipisci, dolore qui. Architecto laudantium officiis rerum reiciendis, aut consequatur consectetur optio expedita ipsa.</p>
+      <div class="button">
+        <button>Let's Chat</button>
+    </div>
+   </div>
+  </div>
+</section>
           <div class="form_container">
             <i class="uil uil-times"></i>
           </div>
@@ -160,5 +177,26 @@
       });
 
     </script>
+    <script>
+      // Add click event listener to scroll button
+      document.querySelector('.scroll-btn').addEventListener('click', function() {
+        // Scroll to the top of the page smoothly
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    
+      // Show or hide the scroll button based on scroll position
+      window.addEventListener('scroll', function() {
+        const scrollBtn = document.querySelector('.scroll-btn');
+        // If the scroll position is greater than 500px, show the scroll button
+        if (window.scrollY > 500) {
+          scrollBtn.style.display = 'block';
+        } else {
+          // Otherwise, hide the scroll button
+          scrollBtn.style.display = 'none';
+        }
+      });
+    </script>
+    
+    
   </body>
 </html>
