@@ -170,11 +170,19 @@
     </div>
 
     <script>
+        const createAccountButton = document.getElementById('createAccount');
+
+            // Add a click event listener to the button
+            createAccountButton.addEventListener('click', function() {
+                // Change the location to createUser.html
+                window.location.href = 'createUser.html';
+        });
         async function login() {
             const userForm = document.getElementById('userForm');
             const formData = new FormData(userForm);
             const user_json = {};
             formData.forEach((value, key) => {user_json[key] = value})
+            console.log(user_json);
 
             try {
                 const response = await fetch('http://127.0.0.1:8000/LogIn/', {
