@@ -5,149 +5,110 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="icon" type="image/x-icon" href="./pic/favicon.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Roboto+Slab:wght@300&display=swap" rel="stylesheet">
-    <style>
-        body {
-            color: #333;
-            font-family: "Fredoka", sans-serif;
-            font-optical-sizing: auto;
-            font-weight: lighter;
-            font-style: normal;
-            font-variation-settings: "wdth" 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            font-weight: 700;
-            background: url('./pic/background_main_pic.jpg');
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-        }
+    <link href="MainStyle.css" rel="stylesheet" />
+  </head>
+  <body>
+     <!--Scroll to up button-->
+     <div class="scroll-btn">
+      <a href="#home"><i class="fas fa-arrow-up"></i></a>
+     </div>
+    <!--Header-->
+    <header class="header" id="home">
+      <nav class="nav">
+        <a href="#" class="nav_logo"><img class="logo" src="./pic/comuneedy_logo.png"></a>
 
-        form {
-            background: transparent; 
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(20px);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        }
+        <ul class="nav_items">
+          <li class="nav_item">
+            <a href="#" class="nav_link">Home</a>
+            <a href="#" class="nav_link">Request</a>
+            <a href="#" class="nav_link">Profile</a>
+            <a href="#" class="nav_link">Contact</a>
+            <a href="#" class="nav_link">About</a>
+          </li>
+        </ul>
+        <div class="media-icons">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
 
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 16px;
-            box-sizing: border-box;
-        }
+        <button class="button" id="loginButton">Login</button>
+      </nav>
+    </header>
 
-        button {
-            width: 100%;
-            height: 30px;
-            background: #fff;
-            border: none;
-            outline: none;
-            border-radius: 40px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-            cursor: pointer;
-            font-size: 16px;
-            color: #333;
-            font-weight: 600;
-            margin-bottom: 16px;
-        }
+    <!--Home-->
+    <section class="home">
+        <div class="home-content">
+            <div class="text">
+                <div class = "text-one">Empowering Help,</div>
+                <div class = "text-two">Connecting Hearts,</div>
+                <div class = "text-three">Changing Lives.</div>
+            </div>
+            <div class="button">
+              <a href="./createUser.html"><button>Join Us Today</button></a>
+            </div>
+          </section>
 
-        button:hover {
-            background: #333;
-            color: #fff;
-        }
-        
-        h1 {
-            margin: 0;
-            margin-bottom: 15px;
-            text-align: center;
-            color: #333;
-            font-size: 35px
-        }
-
-        a{
-            display: block;
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        img{
-            width: 300px;
-        }
-
-
-
-        /* Small devices (landscape phones, 576px and up) */
-        @media (max-width: 576px) { 
-            body {
-                font-size: 14px;
-            }
-            .container {
-                display: flex;
-                flex-direction: column;
-            }
-            
-            .form {
-                padding: 10px;
-            }
-        }
-
-        /* Medium devices (tablets, 768px and up) */
-        @media (min-width: 768px) {
-            body {
-                font-size: 16px; 
-            }
-        }
-
-        /* Large devices (desktops, 992px and up) */
-        @media (min-width: 992px) { 
-            body {
-                font-size: 18px;
-            }
-        }
-
-        /* Extra large devices (large desktops, 1200px and up) */
-        @media (min-width: 1200px) {
-            body {
-                font-size: 20px;
-            }
-        }
-
-        /* iPad */
-        @media only screen and (min-device-width: 768px) and (max-device-width: 1024px)  {
-            body {
-                font-size: 14px;
-            }
-        }
-
-        /* TV */
-        @media only screen and (min-width: 1920px) {
-            body {
-                font-size: 22px;
-            }  
-            .container {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-            .container, .form {
-                width: 650px;
-            }
-        }
-                
-
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="logo">
-            <img src="./pic/comuneedy_logo.png" alt="logo">
+          <!--About Section Start-->
+    <section class="about" id="about">
+            <div class="content">
+              <div class="title"><span>About Us</span></div>
+              <div class="about-details">
+                <div class="right">
+                   <img src="./pic/tg.jpg" alt="">
+              </div>
+              <div class="left">
+                 <div class="topic">Helping Is What Make Us Better Comuunity!</div>
+                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum aperiam quos molestias fuga, culpa dolore facilis corrupti maxime distinctio atque nobis vero doloribus blanditiis porro officia pariatur itaque voluptatem exercitationem.</p>
+                 <div class="button">
+                  <a href="./createUser.html"><button>Join Us Today</button></a>
+                   </div>
+                 </div>
+               </div>
+             </div>
+          </section>
+          <!--Another Section Of Options-->
+<section class="skills" id="skills">
+  <div class="content">
+    <div class="title"><span>Our ComuNeedy</span></div>
+    <div class="skill-details"> <!-- Corrected typo here -->
+      <div class="left">
+        <div class="topic">Helping Reflects Our Knowledge</div>
+        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Et recusandae, minus consequatur omnis corrupti fuga facere eius? Fugiat iure voluptate iste nisi distinctio minus eius sed expedita, possimus repudiandae impedit.</p>
+        <div class="experience">
+          <div class="num">1</div>
+          <div class="exp">In Comuinity <br>Unity Prevails</div>
+        </div>
+      </div>
+      <div class="boxes">
+        <div class="box">
+          <div class="topic">Users</div>
+          <div class="num">95</div>
+        </div>
+        <div class="box">
+          <div class="topic">Volunteers</div>
+          <div class="num">82</div>
+        </div>
+        <div class="box">
+          <div class="topic">People We Helped</div>
+          <div class="num">55</div>
+        </div>
+        <div class="box">
+          <div class="topic">Successful Taks</div>
+          <div class="num">22</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--Another Section Of Our Rules-->
+<section class="services" id="services">
+  <div class="content">
+    <div class="title"><span>Our Services & Rules</span></div>
+    <div class="boxes">
+      <div class="box">
+        <div class="icon">
+          <i class="fas fa-desktop"></i>
         </div>
 
         <div class="form">
@@ -170,37 +131,28 @@
     </div>
 
     <script>
-        async function login() {
-            const userForm = document.getElementById('userForm');
-            const formData = new FormData(userForm);
-            const user_json = {};
-            formData.forEach((value, key) => {user_json[key] = value})
+      const loginButton = document.getElementById("loginButton");
+      loginButton.addEventListener("click", function() {
+        window.location.href = "index.html";
+      });
 
-            try {
-                const response = await fetch('http://127.0.0.1:8000/LogIn/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(user_json),
-                });
-
-                if(!response.ok){
-                    const errorMessage = await response.text();
-                    alert(`Error: ${errorMessage}`);
-                }
-                else {
-                    const result = await response.json();
-                    displaySuccessMessage(`Success: ${result.message}`);
-                    const nexturl = result.nexturl;
-                    window.location.href = nexturl;
-                    hideForm();
-                }
-            } 
-            catch (error) {
-                console.error(`Error:`, error);
-                alert(`An error occurred. Please try again.`);
-            }
+    </script>
+    <script>
+      // Add click event listener to scroll button
+      document.querySelector('.scroll-btn').addEventListener('click', function() {
+        // Scroll to the top of the page smoothly
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    
+      // Show or hide the scroll button based on scroll position
+      window.addEventListener('scroll', function() {
+        const scrollBtn = document.querySelector('.scroll-btn');
+        // If the scroll position is greater than 500px, show the scroll button
+        if (window.scrollY > 500) {
+          scrollBtn.style.display = 'block';
+        } else {
+          // Otherwise, hide the scroll button
+          scrollBtn.style.display = 'none';
         }
         function displaySuccessMessage(message) {
             const successMessageElement = document.getElementById('successMessage');
