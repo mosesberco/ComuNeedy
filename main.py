@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException, Body
 from fastapi.responses import JSONResponse
-from sqlalchemy import create_engine, Column, Integer, Boolean, String, DateTime, func
+from sqlalchemy import create_engine, Column, Integer, Boolean, String, DateTime,Sequence, func
+from sqlalchemy.sql import text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,6 +10,14 @@ from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 from contextlib import asynccontextmanager
 from fastapi.responses import FileResponse
+
+
+id_Request = 0
+def mydefault_id_Request():
+    global id_Request
+    id_Request += 1
+    return id_Request
+
 
 api_app = FastAPI(
     title="Your FastAPI App",
@@ -28,21 +37,24 @@ api_app.add_middleware(
 )
 
 # adding the relative path
-DATABASE_URL = "sqlite:///Users.db"
-engine_users = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+DATABASE_User_URL = "sqlite:///Users.db"
+DATABASE_Request_URL = "sqlite:///Request.db"
+engine_users = create_engine(DATABASE_User_URL, connect_args={"check_same_thread": False})
+engine_requests = create_engine(DATABASE_Request_URL, connect_args={"check_same_thread": False})
 
 
 Base = declarative_base()
 SessionLocalUsers = sessionmaker(autocommit=False, autoflush=False, bind=engine_users)
-
+SessionLocalRequests = sessionmaker(autocommit=False, autoflush=False, bind=engine_requests)
 
 @asynccontextmanager
 async def lifespan(api_app: FastAPI):
     Base.metadata.create_all(bind=engine_users)
+    Base.metadata.create_all(bind=engine_requests)
     yield
 
 
-def get_db():
+def get_db_users():
     def dependcy():
         db = SessionLocalUsers()
         try:
@@ -52,6 +64,15 @@ def get_db():
 
     return dependcy
 
+def get_db_requests():
+    def dependcy():
+        db = SessionLocalRequests()
+        try:
+            yield db
+        finally:
+            db.close()
+
+    return dependcy
 
 class User(Base):
     __tablename__ = "Users"
@@ -68,13 +89,25 @@ class User(Base):
     Role = Column(String, index=True)
     IsBlocked = Column(Boolean, default=False)
 
+class Request(Base):
+    __tablename__ = "Request"
+    ##id_Request = Column(Integer, Sequence('request_id_seq'), primary_key=True, server_default=text("nextval('request_id_seq')"))
+    ##id_Request = Column(Integer, primary_key=True, server_default=Sequence('request_id_seq'), autoincrement=True)
+    id_Request = Column(Integer, primary_key=True, default=mydefault_id_Request())
+    First_name = Column(String)
+    Last_name = Column(String)
+    Information = Column(String)
+    Availability = Column(DateTime)
+    Additional_Req = Column(String)
+    City = Column(String)
+    Created_at = Column(DateTime, default=func.now())
+
 
 def email_in_db(email: str, db: Session):
     return db.query(User).filter(User.Email == email).first() is not None
 
-
 @api_app.post("/add_user")
-async def AddUser(user_data: dict, db: Session = Depends(get_db())):
+async def AddUser(user_data: dict, db: Session = Depends(get_db_users())):
     print("addUser activate")
     First_name = user_data.get("First_name")
     Last_name = user_data.get("Last_name")
@@ -96,6 +129,19 @@ async def AddUser(user_data: dict, db: Session = Depends(get_db())):
     return {"message": "User added successfully"}
 
 
+@api_app.post("/new_request")
+async def NewRequest(user_data : dict,db: Session = Depends(get_db_requests())):
+    first_name = user_data.get("First_name")
+    last_name = user_data.get("Last_name")
+    city = user_data.get("City")
+    information = user_data.get("Information")
+    availability = user_data.get("Availability")
+    additional_Req = user_data.get("Additional_Req")
+    new_request = Request(First_name = first_name, Last_name = last_name, City = city, Information = information,Availability=availability, Additional_Req = additional_Req )
+    db.add(new_request)
+    db.commit
+    return {"message": "Request added successfully"}
+
 app = FastAPI(title="main app", lifespan=lifespan)
 html_path = Path(__file__).parent / "templates" / "login.html"
 app.mount("/api", api_app)
@@ -103,7 +149,7 @@ app.mount("/", StaticFiles(directory="templates", html=True), name="templates")
 
 
 @api_app.post('/BlockUser')
-def BlockUser(email: str, db: Session = Depends(get_db())):
+def BlockUser(email: str, db: Session = Depends(get_db_users())):
     user_to_block = db.query(User).filter(User.Email == email).first()
     if user_to_block is None:
         raise HTTPException(status_code=404, detail="User not found")
@@ -111,7 +157,7 @@ def BlockUser(email: str, db: Session = Depends(get_db())):
     return JSONResponse({'message': 'User Blocked Succesfully !'})
 
 @api_app.post('/LogIn')
-def LogIn(user: dict, db: Session = Depends(get_db())):
+def LogIn(user: dict, db: Session = Depends(get_db_users())):
     userlogin = db.query(User).filter(User.Email == user.get("Email")).first()
     if userlogin is None:
         raise HTTPException(status_code=404, detail="Sorry, we don't recognize this email.")
@@ -125,7 +171,7 @@ async def read_login():
 #added code by Ariel - Check over it.
 #func to get user's name and city to fetch it in JS.
 @app.get("/api/user")
-def get_user(user: dict, db: Session = Depends(get_db())):
+def get_user(user: dict, db: Session = Depends(get_db_users())):
     return {
         "name": User.First_name,
         "city": User.City
