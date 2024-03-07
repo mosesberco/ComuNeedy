@@ -1,0 +1,102 @@
+/*Import Google font - Poppins */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swag");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+:root {
+  --primary: #181736;
+  --secondry: #252549;
+  --text-color: #fff;
+}
+
+.app {
+  min-height: 100vh;
+  background-color: var(--primary);
+  color: var(--text-color);
+  display: grid;
+  place-items: center;
+}
+
+.rating {
+  width: 75vw;
+  display: flex;
+  align-items: center;
+  column-gap: 2rem;
+}
+
+.rating__average {
+  width: 30%;
+  background-color: var(--secondry);
+  padding: 1rem;
+  border-radius: 0.8rem;
+  text-align: center;
+}
+.rating__progress h1 {
+  font-size: 3rem;
+}
+
+.rating__average .star-outer {
+  position: relative;
+  font-size: 2rem;
+  display: inline-block;
+}
+.rating__average .star-outer::before {
+  content: "\2605 \2605 \2605 \2605 \2605";
+  color: #fff8;
+}
+.rating__average .star-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  overflow: hidden;
+}
+
+.rating__average .star-inner::before {
+  content: "\2605 \2605 \2605 \2605 \2605";
+  color: gold;
+}
+
+.rating__progress p {
+  margin-top: 0.7rem;
+  letter-spacing: 0.1rem;
+}
+
+.rating__progress {
+  width: 70%;
+}
+
+.rating__progress-value {
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  column-gap: 1rem;
+}
+
+.rating__progress-value .star {
+  font-size: 1.2rem;
+  color: gold;
+}
+
+.rating__progress-value p:last-child {
+  width: 10%;
+}
+
+.rating__progress .progress {
+  flex: 1 1 0;
+  height: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: #ff02;
+}
+
+.bar {
+  height: 100%;
+  background-color: gold;
+  border-radius: 0.5rem;
+}
