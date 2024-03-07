@@ -143,66 +143,93 @@
             <form id="newRequest">
 
                 <h1>Raise A New Request</h1>
-                
-                <label>Name</label>
-                <p id="userName"></p>
-                <label>City</label>
-                <p id="city"></p>
+                <label for="First_name">First Name</label>
+                <p type="text" id="First_name" name="First_name"></p>
+                <label for="Last_name">Last Name</label>
+                <p type="text" id="Last_name" name="Last_name"></p>
+                <label for="City">City</label>
+                <p type="text" id="City" name="City"></p>
 
-                <label>What is the problem?</label>
-                <textarea id="problem"></textarea>
+                <label for="Information">What is the problem?</label>
+                <input type="text" id="Information" name="Information"></input>
 
-                <label>Availability</label>
-                <input type="datetime-local"
-                       id="Test_DatetimeLocal"
-                       min="2024-01-01T00:00"
-                       max="2026-12-31T23:59"
-                       step="1">
-                <div id="availabilityFields"></div>
-                <button id="addAvailability">+</button>
+                <label for="Availability">Availability</label>
+                <p type="text" id="availabilityDate" name="Availability"></p>
+            
+                <label for="Additional_Req">Additional Requests</label>
+                <input type="text" id="Additional_Req" name="Additional_Req"></input>
 
-                <label>Additional Requests</label>
-                <textarea id="additionalRequests"></textarea>
-
-                <button type="button" id="submitRequest" onclick="submitRequest()">Submit Request</button>
-                                     
-
+                <button type="button" onclick="submitRequest()">Submit Request</button>
+                                    
             </form>
         </div>
-        
+        <p id="successMessage" style="display: none; color: #333;"></p>
     </div>
 
     <script>
 
-        fetch("/api/user")
-        .then(response => response.json())
-        .then(data => {
-            userName = data.name;
-            userCity = data.city;
+        document.addEventListener('DOMContentLoaded', async function() {
 
-            document.getElementById('userName').innerText = userName;
-            document.getElementById('city').innerText = userCity;
-        });
+            try {
+                const response = await fetch('/api/user/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
 
-        const addAvailability = document.getElementById('addAvailability');
-        const availabilityFields = document.getElementById('availabilityFields');
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
 
-        addAvailability.addEventListener('click', (e) => {
-            e.preventDefault();
-            const newDataTime = document.createElement('input');
-            newDataTime.type = 'datetime-local';
-            newDataTime.min = '2024-01-01T00:00';
-            newDataTime.max = '2026-12-31T23:59';
-            newDataTime.step = '1';
-            newDataTime.style.marginBottom = '10px';
+                const userData = await response.json();
 
-            availabilityFields.appendChild(newDataTime);
+                document.getElementById('First_name').innerHTML = userData.name;
+                document.getElementById('Last_name').innerHTML = userData.last_name;
+                document.getElementById('City').innerHTML = userData.city;
+            } catch (error) {
+                console.error(`Error: ${error}`);
+            }
+
+
         });
 
 
         async function submitRequest() {
-            
+
+            const userForm = document.getElementById('newRequest');
+            const formData = new FormData(userForm);
+            const user_json = {};
+            formData.forEach((value, key) => {user_json[key] = value;});
+            try {
+                const response = await fetch('/api/new_request/',//await - waiting for the server to response
+                {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json',
+                },
+                    body: JSON.stringify(user_json),
+                });
+
+                if (!response.ok) {
+                    const errorMessage = await response.text();
+                    alert(`Error: ${errorMessage}`);
+                } else {
+                    const result = await response.json();
+                    displaySuccessMessage(`Success: ${result.message}`);
+                    hideForm();
+                }
+            } 
+            catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred udi. Please try again.');
+            }
+
         }
+
+        var currentDate = new Date();
+        var formattedDate = currentDate.toDateString();
+        document.getElementById("availabilityDate").textContent = formattedDate;
 
     </script>
 

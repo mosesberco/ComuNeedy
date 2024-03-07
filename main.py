@@ -4,6 +4,8 @@ from sqlalchemy import create_engine, Column, Integer, Boolean, String, DateTime
 from sqlalchemy.sql import text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from fastapi.staticfiles import StaticFiles
@@ -91,16 +93,18 @@ class User(Base):
 
 class Request(Base):
     __tablename__ = "Request"
-    ##id_Request = Column(Integer, Sequence('request_id_seq'), primary_key=True, server_default=text("nextval('request_id_seq')"))
-    ##id_Request = Column(Integer, primary_key=True, server_default=Sequence('request_id_seq'), autoincrement=True)
     id_Request = Column(Integer, primary_key=True, default=mydefault_id_Request())
-    First_name = Column(String)
-    Last_name = Column(String)
-    Information = Column(String)
-    Availability = Column(DateTime)
-    Additional_Req = Column(String)
-    City = Column(String)
+    First_name = Column(String, default=None)
+    Last_name = Column(String, default=None)
+    Information = Column(String, default=None)
+    ##Availability = Column(DateTime, default=None)
+    Availability = Column(String, default=None)
+    Additional_Req = Column(String, default=None)
+    City = Column(String, default=None)
     Created_at = Column(DateTime, default=func.now())
+    Is_approved = Column(Boolean, default=False)
+    user_email = Column(String, ForeignKey('Users.Email'))
+    user = relationship("User", back_populates="requests")
 
 
 def email_in_db(email: str, db: Session):
@@ -131,19 +135,22 @@ async def AddUser(user_data: dict, db: Session = Depends(get_db_users())):
 
 @api_app.post("/new_request")
 async def NewRequest(user_data : dict,db: Session = Depends(get_db_requests())):
-    first_name = user_data.get("First_name")
-    last_name = user_data.get("Last_name")
-    city = user_data.get("City")
-    information = user_data.get("Information")
-    availability = user_data.get("Availability")
-    additional_Req = user_data.get("Additional_Req")
-    new_request = Request(First_name = first_name, Last_name = last_name, City = city, Information = information,Availability=availability, Additional_Req = additional_Req )
+    print("in the func") ####
+    user_email = user_data.get("user_email", "")
+    first_name = user_data.get("First_name","")
+    last_name = user_data.get("Last_name","")
+    city = user_data.get("City","")
+    information = user_data.get("Information","")
+    availability = user_data.get("Availability","")
+    additional_Req = user_data.get("Additional_Req","")
+    new_request = Request(First_name = first_name, Last_name = last_name, City = city, Information = information,Availability=availability, Additional_Req = additional_Req, user_email = user_email)
     db.add(new_request)
-    db.commit
+    db.commit()
     return {"message": "Request added successfully"}
+    
 
 app = FastAPI(title="main app", lifespan=lifespan)
-html_path = Path(__file__).parent / "templates" / "login.html"
+html_path = Path(__file__).parent / "templates" / "index.html"
 app.mount("/api", api_app)
 app.mount("/", StaticFiles(directory="templates", html=True), name="templates")
 
@@ -156,25 +163,38 @@ def BlockUser(email: str, db: Session = Depends(get_db_users())):
     user_to_block.IsBlocked = True
     return JSONResponse({'message': 'User Blocked Succesfully !'})
 
-@api_app.post('/LogIn')
+
+@api_app.post('/login')
 def LogIn(user: dict, db: Session = Depends(get_db_users())):
     userlogin = db.query(User).filter(User.Email == user.get("Email")).first()
     if userlogin is None:
         raise HTTPException(status_code=404, detail="Sorry, we don't recognize this email.")
     if userlogin.Password == user.get("Password"):
-        return JSONResponse({'message': 'Logging in...', 'nexturl': '!!!URLHOMEPAGE!!!.html'})
+        return JSONResponse({'message': 'Logging in...', 'nexturl': 'index.html'})
+    else:
+        raise HTTPException(status_code=401, detail="Invalid password")
+
 
 @app.get("/login")
 async def read_login():
+    html_path = Path(__file__).parent / "templates" / "login.html"
     return FileResponse(html_path, media_type="text/html")
+
 
 #added code by Ariel - Check over it.
 #func to get user's name and city to fetch it in JS.
-@app.get("/api/user")
-def get_user(user: dict, db: Session = Depends(get_db_users())):
+@app.get("/api/user/")
+async def get_user_info(email: str, db: Session = Depends(get_db_users())):
+    # Fetch user information from the database
+    user = db.query(User).filter(User.Email == email).first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
     return {
-        "name": User.First_name,
-        "city": User.City
+        "First_name": user.First_name,
+        "Last_name": user.Last_name,
+        "City": user.City,
     }
 #until to here...
 
