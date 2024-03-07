@@ -152,14 +152,6 @@
                 <label>What is the problem?</label>
                 <textarea id="problem"></textarea>
 
-                <label>Availability</label>
-                <input type="datetime-local"
-                       id="Test_DatetimeLocal"
-                       min="2024-01-01T00:00"
-                       max="2026-12-31T23:59"
-                       step="1">
-                <div id="availabilityFields"></div>
-                <button id="addAvailability">+</button>
 
                 <label>Additional Requests</label>
                 <textarea id="additionalRequests"></textarea>
@@ -173,7 +165,8 @@
     </div>
 
     <script>
-
+        document.getElementById('submitRequest').addEventListener('click', submitRequest);
+        async function submitRequest() {
         fetch("/api/user")
         .then(response => response.json())
         .then(data => {
@@ -200,9 +193,41 @@
         });
 
 
-        async function submitRequest() {
-            
-        }
+
+        // Get form elements
+        const name = document.getElementById('userName').innerText;
+        const city = document.getElementById('city').innerText;
+        const problem = document.getElementById('problem').value;
+        const datetime = document.getElementById('Test_DatetimeLocal').value;
+        const additionalRequests = document.getElementById('additionalRequests').value;
+
+        // Prepare data object
+        const requestData = {
+            name: name,
+            city: city,
+            problem: problem,
+            datetime: datetime,
+            additionalRequests: additionalRequests
+        };
+
+        // Fetch API call
+        fetch('/api/Add_Request/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response from the server if needed
+            console.log('Server response:', data);
+        })
+        .catch(error => {
+            // Handle errors
+            console.error('Error:', error);
+        });
+}
 
     </script>
 
