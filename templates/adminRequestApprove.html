@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>adminRequestApprove</title>
+    <link rel="icon" type="image/x-icon" href="./pic/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Roboto+Slab:wght@300&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background-color: #826afb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        img {
+            width: 200px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .requestsList {
+            width: 300px;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .userDetails {
+            display: flex;
+            margin-bottom: 1px;
+        }
+
+        .fistName,
+        .lastName {
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .city {
+            display: block; /* Change display property to block */
+            margin-top: 1px; /* Add some space between names and city */
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        .details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        button {
+            display: inline-block;
+            width: 48%;
+            height: 30px;
+            background: #826afb;
+            border: none;
+            outline: none;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #fff;
+            font-weight: 600;
+            margin-top: 5px
+        }
+
+        .approveButton:hover {
+            background: #074e05;
+            color: #fff;
+        }
+
+        .denyButton:hover {
+            background: #980000;
+            color: #fff;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="logo">
+            <img src="./pic/comuneedy_logo.png" alt="logo">
+        </div>
+
+
+        <div class="requestsList">
+
+            <div class="userDetails">
+                <h3 class="fistName" id="firstName">Ariel</h3>
+                <h3 class="lastName" id="lastName">Perstin</h3>
+            </div>
+
+            <h3 class="city" id="city">Beer Sheva</h3>
+            <li class="dates" id="dates">21/03/2026</li>
+            <p class="requestDetails" id="requestDetails">I need help with groceries</p>
+
+            <button id="approveRequest" class="approveButton" onclick="approveRequest()">Approve Request</button>
+            <button id="denyRequest" class="denyButton" onclick="denyRequest()">Deny Request</button>
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+    <script>
+    /*async function approveRequest() { //async - function that waiting for the server for response and dont do all at once
+        const userForm = document.getElementById('userForm');
+        const formData = new FormData(userForm);
+        const user_json = {};
+        formData.forEach((value, key) => {user_json[key] = value;});
+
+        try {
+            const response = await fetch('/api/add_user/',//await - waiting for the server to response
+             {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(user_json),
+            });
+
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                alert(`Error: ${errorMessage}`);
+            } else {
+                const result = await response.json();
+                displaySuccessMessage(`Success: ${result.message}`);
+                hideForm();
+            }
+        }
+        catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        }
+    }*/
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const approveButton = document.getElementById('approveRequest');
+        const denyButton = document.getElementById('denyRequest');
+
+        approveButton.addEventListener('click', () => {
+            approveRequest();
+        });
+
+        denyButton.addEventListener('click', () => {
+            denyRequest();
+        });
+
+        async function approveRequest() {
+            try {
+                const response = await fetch('/api/request', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id_request: YOUR_REQUEST_ID,
+                    }),
+                });
+
+                if (response.ok) {
+                    // Request approved successfully, you can update the UI or do additional actions
+                    console.log('Request approved successfully');
+                } else {
+                    // Handle error, maybe show a message to the user
+                    console.error('Error approving request');
+                }
+            } catch (error) {
+                console.error('Error approving request:', error);
+            }
+        }
+
+        async function denyRequest() {
+            try {
+                const response = await fetch('/api/request', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id_request: YOUR_REQUEST_ID,
+                    }),
+                });
+
+                if (response.ok) {
+                    // Request denied successfully, you can update the UI or do additional actions
+                    console.log('Request denied successfully');
+                } else {
+                    // Handle error, maybe show a message to the user
+                    console.error('Error denying request');
+                }
+            } catch (error) {
+                console.error('Error denying request:', error);
+            }
+        }
+    });
+
+    </script>
+
+</body>
+</html>

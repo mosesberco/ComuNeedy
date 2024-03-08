@@ -2,14 +2,13 @@ from fastapi import FastAPI, Depends, HTTPException, Body
 from fastapi.responses import JSONResponse
 from sqlalchemy import create_engine, Column, Integer, Boolean, String, DateTime, func, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, Session, relationship
+from sqlalchemy.orm import sessionmaker, Session
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 from contextlib import asynccontextmanager
 from fastapi.responses import FileResponse
-from datetime import datetime
 
 api_app = FastAPI(
     title="Your FastAPI App",
@@ -17,6 +16,7 @@ api_app = FastAPI(
     version="0.1",
     templates="templates"  # Specify the location of the templates directory
 )
+
 
 # Allow all origins for demonstration purposes.
 api_app.add_middleware(
@@ -28,7 +28,7 @@ api_app.add_middleware(
 )
 
 # adding the relative path
-DATABASE_URL = "sqlite:///./Users.db"
+DATABASE_URL = "sqlite:///Users.db"
 engine_users = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 
 id_request = 0
@@ -140,7 +140,6 @@ async def AddUser(user_data: dict, db: Session = Depends(get_db())):
                     City=City, Age=Age, Proficiency=Proficiency, Role=Role, Last_login=Last_login)
     db.add(new_user)
     db.commit()
-
     return {"message": "User added successfully"}
 
 
@@ -212,13 +211,38 @@ async def read_login():
 # func to get user's name and city to fetch it in JS.
 @app.get("/api/user")
 def get_user(user: dict, db: Session = Depends(get_db())):
-    return {
-        "name": user.get("First_name"),
-        "city": user.get("City")
-    }
+    user_in_db = db.query(User).filter(User.Email == user.get("Email")).first()
+    return user_in_db
+    # return {
+    #    "name": user.get("First_name"),
+    #    "city": user.get("City")
+    #}
 
 
 # until to here...
+@app.get("/api/request")
+def get_request(request: dict, db: Session = Depends(get_db())):
+    request_in_db = db.query(Request).filter(Request.id_request == request.get("id_request")).first()
+    return request_in_db
+
+
+@app.patch("/api/request")
+async def approve_request(request: dict, db: Session = Depends(get_db())):
+    request_in_db = get_request(request, db)
+    if not request_in_db:
+        raise HTTPException(status_code=404, detail="Request not found")
+    request_in_db.Is_Approved = True
+    db.commit()
+    return {"message": "Request updated successfully"}
+
+@app.delete("/api/request")
+async def deny_request(request: dict, db: Session = Depends(get_db())):
+    request_in_db = get_request(request, db)
+    if not request_in_db:
+        raise HTTPException(status_code=404, detail="Request not found")
+    db.delete(request_in_db)
+    db.commit()
+    return {"message": "Request removed successfully"}
 
 if __name__ == '__main__':
     uvicorn.run(app, port=8080, host='0.0.0.0')
