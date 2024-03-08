@@ -1,52 +1,88 @@
-let data = [
-  {
-    star: 5,
-    count: 99980,
-  },
-  {
-    star: 4,
-    count: 39300,
-  },
-  {
-    star: 3,
-    count: 25050,
-  },
-  {
-    star: 2,
-    count: 10070,
-  },
-  {
-    star: 1,
-    count: 5020,
-  },
-];
+// Define functions
+function calculateRating(data) {
+  if (!data) {
+    throw new Error("Data is undefined or null");
+  }
 
-let total_rating = 0,
-  rating_based_on_stars = 0;
+  let total_rating = 0;
+  let rating_based_on_stars = 0;
 
-data.forEach((rating) => {
-  total_rating += rating.count;
-  rating_based_on_stars += rating.count * rating.star;
-});
+  data.forEach((rating) => {
+    if (rating.count != null) {
+      total_rating += rating.count;
+      rating_based_on_stars += rating.count * rating.star;
+    } else {
+      throw new Error("Count value is null or undefined");
+    }
+  });
 
-data.forEach((rating) => {
-  let rating_progress = `
-        <div class="rating__progress-value">
-          <p>${rating.star} <span class="star">&#9733;</span></p>
-          <div class="progress">
-            <div class="bar" style="width: ${
-              (rating.count / total_rating) * 100
-            }%;"></div>
-          </div>
-          <p>${rating.count.toLocaleString()}</p>
-        </div> 
+  return { total_rating, rating_based_on_stars };
+}
+
+function generateRatingHTML(data) {
+  let total_rating = 0;
+
+  data.forEach((rating) => {
+    total_rating += rating.count;
+  });
+
+  let ratingHTML = "";
+
+  data.forEach((rating) => {
+    let rating_progress = `
+          <div class="rating__progress-value">
+              <p>${rating.star} <span class="star">&#9733;</span></p>
+              <div class="progress">
+                  <div class="bar" style="width: ${
+                    (rating.count / total_rating) * 100
+                  }%;"></div>
+              </div>
+              <p>${rating.count.toLocaleString()}</p>
+          </div> 
       `;
-  document.querySelector(".rating__progress").innerHTML += rating_progress;
-});
+    ratingHTML += rating_progress;
+  });
 
-let rating_average = (rating_based_on_stars / total_rating).toFixed(1);
-document.querySelector(".rating__average h1").innerHTML = rating_average;
-document.querySelector(".rating__average p").innerHTML =
-  total_rating.toLocaleString();
-document.querySelector(".star-inner").style.width =
-  (rating_average / 5) * 100 + "%";
+  return ratingHTML;
+}
+
+// Attach event listener to DOMContentLoaded
+document.addEventListener("DOMContentLoaded", function () {
+  let data = [
+    {
+      star: 5,
+      count: 99980,
+    },
+    {
+      star: 4,
+      count: 39300,
+    },
+    {
+      star: 3,
+      count: 20,
+    },
+    {
+      star: 2,
+      count: 10070,
+    },
+    {
+      star: 1,
+      count: 25020,
+    },
+  ];
+
+  let ratingHTML = generateRatingHTML(data);
+
+  let { total_rating, rating_based_on_stars } = calculateRating(data);
+
+  let rating_average = (rating_based_on_stars / total_rating).toFixed(1);
+
+  // Update the calculated ratings
+  document.querySelector(".rating__average h1").innerHTML = rating_average;
+  document.querySelector(".rating__average p").innerHTML =
+    total_rating.toLocaleString();
+  document.querySelector(".rating__progress").innerHTML = ratingHTML;
+  document.querySelector(".star-inner").style.width =
+    (rating_average / 5) * 100 + "%";
+});
+module.exports = { calculateRating, generateRatingHTML };
