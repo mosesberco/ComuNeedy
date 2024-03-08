@@ -13,9 +13,21 @@ class TestMain(unittest.TestCase):
         result = asyncio.run(approve_request(request, self.db))
         self.assertEqual(result.get("message"), "Request updated successfully")
 
-    def test_approve_nonexistent_request(self):
-        # Assuming an invalid request
+    def test_approve_invalid_request_id01(self):
+        # Assuming an invalid request - id is str instead int
         request = {"id_request": 'abc'}
+        with self.assertRaises(HTTPException):
+            asyncio.run(approve_request(request, self.db))
+
+    def test_approve_invalid_request_id02(self):
+        # Assuming an invalid request ID - id is float instead int
+        request = {"id_request": 1.5}
+        with self.assertRaises(HTTPException):
+            asyncio.run(approve_request(request, self.db))
+
+    def test_approve_invalid_request_id03(self):
+        # Assuming an invalid request ID - dict is empty
+        request = {}
         with self.assertRaises(HTTPException):
             asyncio.run(approve_request(request, self.db))
 
@@ -25,8 +37,20 @@ class TestMain(unittest.TestCase):
         result = asyncio.run(deny_request(request, self.db))
         self.assertEqual(result.get("message"), "Request removed successfully")
 
-    def test_deny_nonexistent_request(self):
-        # Assuming an invalid request
+    def test_deny_invalid_request_id01(self):
+        # Assuming an invalid request - id is str instead int
         request = {"id_request": 'abc'}
+        with self.assertRaises(HTTPException):
+            asyncio.run(deny_request(request, self.db))
+
+    def test_deny_invalid_request_id02(self):
+        # Assuming an invalid request ID - id is float instead int
+        request = {"id_request": 4.2}
+        with self.assertRaises(HTTPException):
+            asyncio.run(deny_request(request, self.db))
+
+    def test_deny_invalid_request_id03(self):
+        # Assuming an invalid request ID - dict is empty
+        request = {}
         with self.assertRaises(HTTPException):
             asyncio.run(deny_request(request, self.db))
