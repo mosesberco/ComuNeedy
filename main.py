@@ -229,7 +229,7 @@ def get_request(request: dict, db: Session = Depends(get_db())):
 @app.patch("/api/request")
 async def approve_request(request: dict, db: Session = Depends(get_db())):
     request_in_db = get_request(request, db)
-    if not request_in_db:
+    if not request_in_db or type(request.get("id_request")) != int:
         raise HTTPException(status_code=404, detail="Request not found")
     request_in_db.Is_Approved = True
     db.commit()
@@ -238,7 +238,7 @@ async def approve_request(request: dict, db: Session = Depends(get_db())):
 @app.delete("/api/request")
 async def deny_request(request: dict, db: Session = Depends(get_db())):
     request_in_db = get_request(request, db)
-    if not request_in_db:
+    if not request_in_db or type(request.get("id_request")) != int:
         raise HTTPException(status_code=404, detail="Request not found")
     db.delete(request_in_db)
     db.commit()
