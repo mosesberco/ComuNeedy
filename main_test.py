@@ -1,6 +1,5 @@
 from fastapi.testclient import TestClient
 import unittest
-from unittest.mock import Mock
 from main import *
 
 
@@ -10,8 +9,6 @@ class TestMain(unittest.TestCase):
     def setUp(self):
         self.client = TestClient(app)
     
-    def setUp(self):
-        self.db = Mock()
     
     #unit test added by ariel for add user.
     def test_add_user(self):
@@ -19,7 +16,7 @@ class TestMain(unittest.TestCase):
         user_data = {
             "First_name": "Ariel",
             "Last_name": "Perstin",
-            "Email": "k@gmail.com",
+            "Email": "xcvxv@gmail.com",
             "Password": "123456",
             "City": "Beer Sheva",
             "Age": 22,
