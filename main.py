@@ -11,6 +11,7 @@ from contextlib import asynccontextmanager
 from fastapi.responses import FileResponse
 from datetime import datetime
 
+
 api_app = FastAPI(
     title="Your FastAPI App",
     description="Your FastAPI app description",
@@ -100,6 +101,7 @@ class User(Base):
     Proficiency = Column(String)
     Role = Column(String, index=True)
     IsBlocked = Column(Boolean, default=False)
+
 
 
 class Request(Base):
