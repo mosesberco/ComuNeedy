@@ -7,6 +7,7 @@ class TestMain(unittest.TestCase):
         # Initialize a mock database session
         self.db = Mock()
 
+    # TESTING 01-03 MADE BY AI, test_approve_existing_request, test_deny_existing_request MADE BY ME
     def test_approve_existing_request(self):
         # Assuming a valid request
         request = {"id_request": 123}
