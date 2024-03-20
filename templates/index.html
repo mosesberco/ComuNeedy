@@ -22,10 +22,10 @@
         <ul class="nav_items">
           <li class="nav_item">
             <a href="#" class="nav_link">Home</a>
-            <a href="#" class="nav_link">Request</a>
+            <a href="./newRequest.html" class="nav_link">Request</a>
             <a href="#" class="nav_link">Profile</a>
             <a href="#" class="nav_link">Contact</a>
-            <a href="#" class="nav_link">About</a>
+            <a href="./FAQ.html" class="nav_link">About</a>
           </li>
         </ul>
         <div class="media-icons">
@@ -112,23 +112,6 @@
         <div class="icon">
           <i class="fas fa-desktop"></i>
         </div>
-
-        <div class="form">
-            <form id="userForm">
-                <h1>Login</h1>
-                <label for="Email">Email:</label><br>
-                <input type="email" id="Email" name="Email" required><br>
-
-                <label for="Password">Password:</label><br>
-                <input type="password" id="Password" name="Password" required><br>
-
-                <button type="button" onclick="login()">Login</button><br>
-
-                <button type="button" id="createAccount">Create Account</button><br>
-
-                <a href="./forgotPassword.html">Forgot Password?</a>
-            </form>
-        </div>
         <div class="topic">Keep Secrets</div>
         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Autem quos veritatis voluptates sed? Ipsam distinctio vero labore repellendus ex nisi excepturi saepe, expedita dicta quisquam minus, quas obcaecati cupiditate! Sed?</p>
        </div>
@@ -182,10 +165,14 @@
         </div>
 
     <script>
-      const loginButton = document.getElementById("loginButton");
-      loginButton.addEventListener("click", function() {
-        window.location.href = "index.html";
-      });
+        const loginButton = document.getElementById("loginButton");
+        loginButton.addEventListener("click", function() {
+          window.location.href = "login.html";
+        });
+        const requestButton = document.getElementById("request");
+        requestButton.addEventListener("click", function() {
+          window.location.href = "newRequest.html";
+        });
         const createAccountButton = document.getElementById('createAccount');
 
             // Add a click event listener to the button
@@ -199,39 +186,40 @@
             const user_json = {};
             formData.forEach((value, key) => {user_json[key] = value})
             console.log(user_json);
-
-    </script>
-    <script>
-      // Add click event listener to scroll button
-      document.querySelector('.scroll-btn').addEventListener('click', function() {
-        // Scroll to the top of the page smoothly
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-
-      // Show or hide the scroll button based on scroll position
-      window.addEventListener('scroll', function() {
-        const scrollBtn = document.querySelector('.scroll-btn');
-        // If the scroll position is greater than 500px, show the scroll button
-        if (window.scrollY > 500) {
-          scrollBtn.style.display = 'block';
-        } else {
-          // Otherwise, hide the scroll button
-          scrollBtn.style.display = 'none';
-        }
-        function displaySuccessMessage(message) {
-            const successMessageElement = document.getElementById('successMessage');
-            successMessageElement.textContent = message;
-            successMessageElement.style.display = 'block';
-        }
-        function hideForm() {
-        const userForm = document.getElementById('userForm');
-        userForm.style.display = 'none';
         }
 
-        document.getElementById('createAccount').addEventListener('click', function(){
-            window.location.href = 'createUser.html';
+    
+        // Add click event listener to scroll button
+        document.querySelector('.scroll-btn').addEventListener('click', function() {
+          // Scroll to the top of the page smoothly
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
+        // Show or hide the scroll button based on scroll position
+        window.addEventListener('scroll', function() {
+          const scrollBtn = document.querySelector('.scroll-btn');
+          // If the scroll position is greater than 500px, show the scroll button
+          if (window.scrollY > 500) {
+            scrollBtn.style.display = 'block';
+          } else {
+            // Otherwise, hide the scroll button
+            scrollBtn.style.display = 'none';
+          }
+          function displaySuccessMessage(message) {
+              const successMessageElement = document.getElementById('successMessage');
+              successMessageElement.textContent = message;
+              successMessageElement.style.display = 'block';
+          }
+          function hideForm() {
+          const userForm = document.getElementById('userForm');
+          userForm.style.display = 'none';
+          }
+
+          document.getElementById('createAccount').addEventListener('click', function(){
+              window.location.href = 'createUser.html';
+          });
+        })
+  
     </script>
 
 </body>
