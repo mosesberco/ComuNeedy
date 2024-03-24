@@ -148,8 +148,8 @@ async def NewRequest(user_data: dict, db: Session = Depends(get_db_requests())):
     information = user_data.get("Information", "")
     availability = user_data.get("Availability", "")
     additional_Req = user_data.get("Additional_Req", "")
-    new_request = Request(First_name="moshe", Last_name="last_name", City="city", Information="information",
-                          Availability="availability", Additional_Req="additional_Req", user_email="moses@gmail.com")
+    new_request = Request(First_name=first_name, Last_name=last_name, City=city, Information=information,
+                          Availability=availability, Additional_Req=additional_Req, user_email=user_email)
     db.add(new_request)
     db.commit()
     return {"message": "Request added successfully"}
