@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException, Body
 from fastapi.responses import JSONResponse
-from sqlalchemy import create_engine, Column, Integer, Boolean, String, DateTime,Sequence, func
+from sqlalchemy import create_engine, Column, Integer, Boolean, String, DateTime, Sequence, func
 from sqlalchemy.sql import text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
@@ -12,9 +12,11 @@ from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 from contextlib import asynccontextmanager
 from fastapi.responses import FileResponse
-
+import random
 
 id_Request = 0
+
+
 def mydefault_id_Request():
     global id_Request
     id_Request += 1
@@ -27,7 +29,6 @@ api_app = FastAPI(
     version="0.1",
     templates="templates"  # Specify the location of the templates directory
 )
-
 
 # Allow all origins for demonstration purposes.
 api_app.add_middleware(
@@ -44,10 +45,10 @@ DATABASE_Request_URL = "sqlite:///Request.db"
 engine_users = create_engine(DATABASE_User_URL, connect_args={"check_same_thread": False})
 engine_requests = create_engine(DATABASE_Request_URL, connect_args={"check_same_thread": False})
 
-
 Base = declarative_base()
 SessionLocalUsers = sessionmaker(autocommit=False, autoflush=False, bind=engine_users)
 SessionLocalRequests = sessionmaker(autocommit=False, autoflush=False, bind=engine_requests)
+
 
 @asynccontextmanager
 async def lifespan(api_app: FastAPI):
@@ -66,6 +67,7 @@ def get_db_users():
 
     return dependcy
 
+
 def get_db_requests():
     def dependcy():
         db = SessionLocalRequests()
@@ -75,6 +77,7 @@ def get_db_requests():
             db.close()
 
     return dependcy
+
 
 class User(Base):
     __tablename__ = "Users"
@@ -91,9 +94,10 @@ class User(Base):
     Role = Column(String, index=True)
     IsBlocked = Column(Boolean, default=False)
 
+
 class Request(Base):
     __tablename__ = "Request"
-    id_Request = Column(Integer, primary_key=True, default=mydefault_id_Request())
+    id_Request = Column(Integer, primary_key=True, autoincrement=True)
     First_name = Column(String, default=None)
     Last_name = Column(String, default=None)
     Information = Column(String, default=None)
@@ -101,14 +105,15 @@ class Request(Base):
     Availability = Column(String, default=None)
     Additional_Req = Column(String, default=None)
     City = Column(String, default=None)
+    user_email = Column(String, ForeignKey('Users.Email'))
     Created_at = Column(DateTime, default=func.now())
     Is_approved = Column(Boolean, default=False)
-    user_email = Column(String, ForeignKey('Users.Email'))
-    user = relationship("User", back_populates="requests")
+    # user = relationship("User", back_populates="requests")
 
 
 def email_in_db(email: str, db: Session):
     return db.query(User).filter(User.Email == email).first() is not None
+
 
 @api_app.post("/add_user")
 async def AddUser(user_data: dict, db: Session = Depends(get_db_users())):
@@ -134,20 +139,21 @@ async def AddUser(user_data: dict, db: Session = Depends(get_db_users())):
 
 
 @api_app.post("/new_request")
-async def NewRequest(user_data : dict,db: Session = Depends(get_db_requests())):
-    print("in the func") ####
+async def NewRequest(user_data: dict, db: Session = Depends(get_db_requests())):
+    print("in the func")  ####
     user_email = user_data.get("user_email", "")
-    first_name = user_data.get("First_name","")
-    last_name = user_data.get("Last_name","")
-    city = user_data.get("City","")
-    information = user_data.get("Information","")
-    availability = user_data.get("Availability","")
-    additional_Req = user_data.get("Additional_Req","")
-    new_request = Request(First_name = first_name, Last_name = last_name, City = city, Information = information,Availability=availability, Additional_Req = additional_Req, user_email = user_email)
+    first_name = user_data.get("First_name", "")
+    last_name = user_data.get("Last_name", "")
+    city = user_data.get("City", "")
+    information = user_data.get("Information", "")
+    availability = user_data.get("Availability", "")
+    additional_Req = user_data.get("Additional_Req", "")
+    new_request = Request(First_name="moshe", Last_name="last_name", City="city", Information="information",
+                          Availability="availability", Additional_Req="additional_Req", user_email="moses@gmail.com")
     db.add(new_request)
     db.commit()
     return {"message": "Request added successfully"}
-    
+
 
 app = FastAPI(title="main app", lifespan=lifespan)
 html_path = Path(__file__).parent / "templates" / "index.html"
@@ -181,8 +187,8 @@ async def read_login():
     return FileResponse(html_path, media_type="text/html")
 
 
-#added code by Ariel - Check over it.
-#func to get user's name and city to fetch it in JS.
+# added code by Ariel - Check over it.
+# func to get user's name and city to fetch it in JS.
 @app.get("/api/user/")
 async def get_user_info(email: str, db: Session = Depends(get_db_users())):
     # Fetch user information from the database
@@ -196,7 +202,9 @@ async def get_user_info(email: str, db: Session = Depends(get_db_users())):
         "Last_name": user.Last_name,
         "City": user.City,
     }
-#until to here...
+
+
+# until to here...
 
 if __name__ == '__main__':
     uvicorn.run(app, port=8080, host='0.0.0.0')

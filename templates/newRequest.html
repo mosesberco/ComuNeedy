@@ -168,6 +168,48 @@
 
     <script>
 
+
+        async function submitRequest() {
+
+            const userForm = document.getElementById('newRequest');
+            const formData = new FormData(userForm);
+            const user_json = {};
+            formData.forEach((value, key) => {user_json[key] = value;});
+            try {
+                const response = await fetch('/api/new_request/',//await - waiting for the server to response
+                {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json',
+                },
+                    body: JSON.stringify(user_json),
+                });
+                if (!response.ok) {
+                    const errorMessage = await response.text();
+                    alert(`Error: ${errorMessage}`);
+                } else {
+                    const result = await response.json();
+                    //displaySuccessMessage(`Success: ${result.message}`);
+                    hideForm();
+                }
+            }
+            catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred udi 1234. Please try again.');
+            }
+
+        }
+        function displaySuccessMessage(message) {
+                const successMessage = document.getElementById('successMessage');
+                successMessage.textContent = message;
+                successMessage.style.display = 'block';
+                }
+
+        function hideForm() {
+                const form = document.getElementById('newRequest');
+                form.style.display = 'none';
+                }
+
         document.addEventListener('DOMContentLoaded', async function() {
 
             try {
@@ -193,40 +235,6 @@
 
 
         });
-
-
-        async function submitRequest() {
-
-            const userForm = document.getElementById('newRequest');
-            const formData = new FormData(userForm);
-            const user_json = {};
-            formData.forEach((value, key) => {user_json[key] = value;});
-            try {
-                const response = await fetch('/api/new_request/',//await - waiting for the server to response
-                {
-                    method: 'POST',
-                    headers: {
-                    'Content-Type': 'application/json',
-                },
-                    body: JSON.stringify(user_json),
-                });
-
-                if (!response.ok) {
-                    const errorMessage = await response.text();
-                    alert(`Error: ${errorMessage}`);
-                } else {
-                    const result = await response.json();
-                    displaySuccessMessage(`Success: ${result.message}`);
-                    hideForm();
-                }
-            } 
-            catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred udi. Please try again.');
-            }
-
-        }
-
         var currentDate = new Date();
         var formattedDate = currentDate.toDateString();
         document.getElementById("availabilityDate").textContent = formattedDate;
