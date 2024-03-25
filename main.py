@@ -213,6 +213,7 @@ def LogIn(user: dict, db: Session = Depends(get_db_users())):
                 "name": userlogin.First_name,
                 "last_name": userlogin.Last_name,
                 "city": userlogin.City,
+                "role": userlogin.Role,
             }}
         print(user_details)
         return JSONResponse(user_details)
