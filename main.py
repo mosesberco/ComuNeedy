@@ -138,6 +138,35 @@ async def AddUser(user_data: dict, db: Session = Depends(get_db_users())):
     return {"message": "User added successfully"}
 
 
+@api_app.get('/unapproved_requests')
+def get_unapproved_requests():
+    session = SessionLocalRequests()
+    try:
+        # Query to fetch unapproved requests
+        unapproved_requests = session.query(Request).filter(Request.Is_approved == False).all()
+
+        # Convert the requests to a list of dictionaries
+        requests_data = []
+        for request in unapproved_requests:
+            request_dict = {
+                'id_Request': request.id_Request,
+                'First_name': request.First_name,
+                'Last_name': request.Last_name,
+                'Information': request.Information,
+                'Availability': request.Availability,
+                'Additional_Req': request.Additional_Req,
+                'City': request.City,
+                'user_email': request.user_email,
+                'Created_at': str(request.Created_at),
+                'Is_approved': request.Is_approved
+            }
+            requests_data.append(request_dict)
+
+        return requests_data
+    finally:
+        session.close()
+
+
 @api_app.post("/new_request")
 async def NewRequest(user_data: dict, db: Session = Depends(get_db_requests())):
     user_email = user_data.get("email", "")
@@ -182,8 +211,8 @@ def LogIn(user: dict, db: Session = Depends(get_db_users())):
             "user": {
                 "email": userlogin.Email,
                 "name": userlogin.First_name,
-                "last_name":userlogin.Last_name,
-                "city":userlogin.City,
+                "last_name": userlogin.Last_name,
+                "city": userlogin.City,
             }}
         print(user_details)
         return JSONResponse(user_details)
