@@ -140,10 +140,10 @@ async def AddUser(user_data: dict, db: Session = Depends(get_db_users())):
 
 @api_app.post("/new_request")
 async def NewRequest(user_data: dict, db: Session = Depends(get_db_requests())):
-    user_email = user_data.get("user_email", "")
-    first_name = user_data.get("First_name", "")
-    last_name = user_data.get("Last_name", "")
-    city = user_data.get("City", "")
+    user_email = user_data.get("email", "")
+    first_name = user_data.get("name", "")
+    last_name = user_data.get("last_name", "")
+    city = user_data.get("city", "")
     information = user_data.get("Information", "")
     availability = user_data.get("Availability", "")
     additional_Req = user_data.get("Additional_Req", "")

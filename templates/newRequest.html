@@ -198,6 +198,16 @@
             const formData = new FormData(userForm);
             const user_json = {};
             formData.forEach((value, key) => {user_json[key] = value;});
+            if (userDetails) {
+                for (const [key, value] of Object.entries(userDetails)) {
+                    user_json[key] = value;
+                }
+            }
+            user_json[user_email]= userDetails.email;
+            user_json[First_name]= userDetails.name;
+            user_json[Last_name]= userDetails.last_name;
+            user_json[City]= userDetails.city;
+            console.log(user_json)
             try {
                 const response = await fetch('/api/new_request/',//await - waiting for the server to response
                 {
