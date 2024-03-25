@@ -138,6 +138,17 @@ async def AddUser(user_data: dict, db: Session = Depends(get_db_users())):
     return {"message": "User added successfully"}
 
 
+@api_app.put("/approve_request/{request_id}", )
+def approve_request(request_id: int, db: Session = Depends(get_db_requests())):
+    request = db.query(Request).filter(Request.id_Request == request_id)
+    if request is None:
+        raise HTTPException(status_code=404, detail="Request not found")
+    request.Is_approved = True
+    db.commit()
+    db.refresh(request)
+    return {"message": "aprroved successfully"}
+
+
 @api_app.get('/unapproved_requests')
 def get_unapproved_requests():
     session = SessionLocalRequests()

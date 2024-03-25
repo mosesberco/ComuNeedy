@@ -9,6 +9,23 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Roboto+Slab:wght@300&display=swap" rel="stylesheet">
     <style>
+        .requestsGrid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+        .requestCube {
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .approveButton {
+            background-color: green;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -111,51 +128,76 @@
         </div>
 
 
-        <div class="requestsList">
 
-            <div class="userDetails">
-                <h3 class="fistName" id="firstName">Ariel</h3>
-                <h3 class="lastName" id="lastName">Perstin</h3>
-            </div>
-
-            <h3 class="city" id="city">Beer Sheva</h3>
-            <li class="dates" id="dates">21/03/2026</li>
-            <p class="requestDetails" id="requestDetails">I need help with groceries</p>
-
-            <button id="approveRequest" class="approveButton">Approve Request</button>
-            <button id="denyRequest" class="denyButton">Deny Request</button>
-
-        </div>
-
-        <div class="requestsList">
-
-            <div class="userDetails">
-                <h3 class="fistName" id="firstName">Ariel</h3>
-                <h3 class="lastName" id="lastName">Perstin</h3>
-            </div>
-
-            <h3 class="city" id="city">Beer Sheva</h3>
-            <li class="dates" id="dates">21/03/2026</li>
-            <p class="requestDetails" id="requestDetails">I need help with groceries</p>
-
-            <button id="{{request.id_request}}" class="approveButton">Approve Request</button>
-            <button id="denyRequest" class="denyButton">Deny Request</button>
-
-        </div>
-
-
-
+        <button id="fetchRequestsBtn" onclick="displayRequests()">Fetch Requests</button>
+        <div id="requestsContainer"></div>
     </div>
 
-
-
-
-
-
-
-
     <script>
-    window.addEventListener('DOMContentLoaded', () => {
+    // Function to fetch unapproved requests from the FastAPI endpoint
+        async function fetchUnapprovedRequests() {
+            try {
+                const response = await fetch('/api/unapproved_requests');
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching unapproved requests:', error);
+                return [];
+            }
+        }
+
+        // Function to display requests data in the HTML page
+        async function displayRequests() {
+            const requestsContainer = document.getElementById('requestsContainer');
+            const requestsData = await fetchUnapprovedRequests();
+
+            // Clear previous data
+            requestsContainer.innerHTML = '';
+
+            // Display requests data
+            requestsData.forEach(request => {
+                const requestCube = document.createElement('div');
+                requestCube.classList.add('requestCube');
+                requestCube.innerHTML = `
+                    <p>ID: ${request.id_Request}</p>
+                    <p>Name: ${request.First_name} ${request.Last_name}</p>
+                    <p>Information: ${request.Information}</p>
+                    <p>Availability: ${request.Availability}</p>
+                    <p>Additional Requirements: ${request.Additional_Req}</p>
+                    <p>City: ${request.City}</p>
+                    <p>User Email: ${request.user_email}</p>
+                    <p>Created At: ${request.Created_at}</p>
+                    <p>Is Approved: ${request.Is_approved}</p>
+                    <button class="approveButton" onclick="approveRequest(${request.id_Request})">Approve</button>
+                `;
+                requestsContainer.appendChild(requestCube);
+            });
+        }
+        async function approveRequest(requestId) {
+            try {
+                const response = await fetch(`/approve_request/${requestId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ isApproved: true })
+                });
+                if (response.ok) {
+                    console.log('Request approved successfully');
+                    // Refresh the requests display
+                    displayRequests();
+                } else {
+                    console.error('Failed to approve request');
+                }
+            } catch (error) {
+                console.error('Error approving request:', error);
+            }
+        }
+
+        // Attach event listener to the button
+        const fetchRequestsBtn = document.getElementById('fetchRequestsBtn');
+        fetchRequestsBtn.addEventListener('click', displayRequests);
+        window.addEventListener('DOMContentLoaded', () => {
         fetch('/api/requests')
             .then(response => response.json())
             .then(data => {
