@@ -170,6 +170,7 @@
     </div>
 
     <script>
+
         const createAccountButton = document.getElementById('createAccount');
 
             // Add a click event listener to the button
@@ -200,8 +201,11 @@
                 else {
                     const result = await response.json();
                     displaySuccessMessage(`Success: ${result.message}`);
-                    const nexturl = result.nexturl;
-                    window.location.href = nexturl;
+                    sessionStorage.setItem('user', JSON.stringify(result.user));
+                    console.log(result)
+                    console.log(result.user)
+                    const next_url = result.nexturl;
+                    window.location.href = next_url;
                     hideForm();
                 }
             } 

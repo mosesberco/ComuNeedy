@@ -144,13 +144,13 @@
 
                 <h1>Raise A New Request</h1>
                 <label for="First_name">First Name</label>
-                <input type="text" id="First_name" name="First_name"></input>
+                <span id="First_name"></span>
                 <label for="Last_name">Last Name</label>
-                <input type="text" id="Last_name" name="Last_name"></input>
+                <span id="Last_name"></span>
                 <label for="City">City</label>
-                <input type="text" id="City" name="City"></input>
+                <span id="City"></span>
                 <label for="Email">Email</label>
-                <input type="text" id="user_email" name="user_email"></input>
+                <span id="user_email"></span>
 
                 <label for="Information">What is the problem?</label>
                 <input type="text" id="Information" name="Information"></input>
@@ -169,6 +169,27 @@
     </div>
 
     <script>
+        const userDetails =JSON.parse(sessionStorage.getItem('user'));
+        document.addEventListener('DOMContentLoaded', function() {
+            if (userDetails) {
+            const nameField = document.getElementById('First_name');
+            const lastnameField = document.getElementById('Last_name');
+            const emailField = document.getElementById('user_email');
+            const cityField = document.getElementById('City');
+
+
+            // Assuming the name is stored as a single string
+            nameField.textContent = userDetails.name;
+            nameField.readOnly = true;
+            lastnameField.textContent = userDetails.last_name;
+
+            emailField.textContent = userDetails.email;
+            emailField.readOnly = true; // Make the email field read-only
+
+            cityField.textContent = userDetails.city;
+            cityField.readOnly = true;
+            }
+        });
 
 
         async function submitRequest() {
@@ -193,6 +214,7 @@
                     const result = await response.json();
                     displaySuccessMessage(`Success: ${result.message}`);
                     hideForm();
+                    window.location.href = 'index.html';
                 }
             }
             catch (error) {

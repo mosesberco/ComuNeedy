@@ -140,7 +140,6 @@ async def AddUser(user_data: dict, db: Session = Depends(get_db_users())):
 
 @api_app.post("/new_request")
 async def NewRequest(user_data: dict, db: Session = Depends(get_db_requests())):
-    print("in the func")  ####
     user_email = user_data.get("user_email", "")
     first_name = user_data.get("First_name", "")
     last_name = user_data.get("Last_name", "")
@@ -176,7 +175,18 @@ def LogIn(user: dict, db: Session = Depends(get_db_users())):
     if userlogin is None:
         raise HTTPException(status_code=404, detail="Sorry, we don't recognize this email.")
     if userlogin.Password == user.get("Password"):
-        return JSONResponse({'message': 'Logging in...', 'nexturl': 'index.html'})
+        userlogin.Last_login = func.now()
+        user_details = {
+            "message": "Logging in...",
+            "nexturl": "index.html",
+            "user": {
+                "email": userlogin.Email,
+                "name": userlogin.First_name,
+                "last_name":userlogin.Last_name,
+                "city":userlogin.City,
+            }}
+        print(user_details)
+        return JSONResponse(user_details)
     else:
         raise HTTPException(status_code=401, detail="Invalid password")
 

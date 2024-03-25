@@ -171,9 +171,30 @@
    </div>
  
  <script>
+     window.addEventListener('load', function() {
+        const loggedInUser = sessionStorage.getItem('user');
+        const loginButton = document.getElementById('loginButton');
+
+        if (loggedInUser) {
+            loginButton.textContent = 'Log Out';
+            loginButton.addEventListener('click', function() {
+            // Remove the logged-in user from sessionStorage
+            sessionStorage.removeItem('user');
+            // Redirect the user to the login page or any other desired page
+            window.location.href = 'index.html';
+            });
+        } else {
+            loginButton.textContent = 'Login';
+            loginButton.addEventListener('click', function() {
+            window.location.href = 'login.html';
+            });
+            }
+        });
      const loginButton = document.getElementById("loginButton");
      loginButton.addEventListener("click", function() {
+     if (loggedInUser){
        window.location.href = "login.html";
+       }
      });
      const requestButton = document.getElementById("request");
      requestButton.addEventListener("click", function() {
