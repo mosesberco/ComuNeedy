@@ -393,6 +393,10 @@ footer .content .stay-in-touch {
   color: #000; /* Text color */
   margin-top: 10px; /* Adjust margin-top to reduce the gap */
   padding-bottom: 10px; /* Add padding at the bottom for separation */
+  margin: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 footer .content .stay-in-touch p {
@@ -418,6 +422,10 @@ footer .content .stay-in-touch .icons a:last-child {
 footer .content .stay-in-touch a {
   color: #000; /* Link color */
   text-decoration: none; /* Remove underline from links */
+  margin: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 footer .content .stay-in-touch a:hover {
@@ -426,6 +434,7 @@ footer .content .stay-in-touch a:hover {
 footer .content .stay-in-touch ul li {
   margin-bottom: 5px; /* Bottom margin for each list item */
   margin-top: 5px; /* Adjust margin-top to bring the list closer to the title */
+  list-style: none;
 }
 
 /*Scroll up button*/
