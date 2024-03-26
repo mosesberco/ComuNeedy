@@ -141,15 +141,64 @@ async def AddUser(user_data: dict, db: Session = Depends(get_db_users())):
 @api_app.put("/approve_request/{request_id}", )
 def approve_request(request_id: int, db: Session = Depends(get_db_requests())):
     request = db.query(Request).filter(Request.id_Request == request_id).first()
-    print(request)
     if request is None:
         raise HTTPException(status_code=404, detail=f"Request with ID {request_id} not found")
     request.Is_approved = True
     db.commit()
-    #db.refresh(request)
+    # db.refresh(request)
     return {"message": "aprroved successfully"}
 
 
+@api_app.get('/approved_requests')
+def get_approved_requests():
+    session = SessionLocalRequests()
+    try:
+        # Query to fetch unapproved requests
+        approved_requests = session.query(Request).filter(Request.Is_approved == True).all()
+
+        # Convert the requests to a list of dictionaries
+        requests_data = []
+        for request in approved_requests:
+            request_dict = {
+                'id_Request': request.id_Request,
+                'First_name': request.First_name,
+                'Last_name': request.Last_name,
+                'Information': request.Information,
+                'Availability': request.Availability,
+                'Additional_Req': request.Additional_Req,
+                'City': request.City,
+                'user_email': request.user_email,
+                'Created_at': str(request.Created_at),
+                'Is_approved': request.Is_approved
+            }
+            requests_data.append(request_dict)
+
+        return requests_data
+    finally:
+        session.close()
+
+@api_app.get('/users_list')
+def get_users_list():
+    db = SessionLocalUsers()
+    try:
+        users_data = db.query(User).filter(User.IsBlocked ==False).all()
+        users_list = []
+        for user in users_data:
+            user_dict = {
+                "First_name": user.First_name,
+                "Last_name": user.Last_name,
+                "Email":user.Email,
+                "created_at": user.created_at,
+                "Address":user.Address,
+                "City":user.City,
+                "Age":user.Age,
+                "Proficiency":user.Proficiency,
+                "Role":user.Role
+            }
+            users_list.append(user_dict)
+        return users_list
+    finally:
+        db.close()
 @api_app.get('/unapproved_requests')
 def get_unapproved_requests():
     session = SessionLocalRequests()
@@ -201,7 +250,7 @@ app.mount("/api", api_app)
 app.mount("/", StaticFiles(directory="templates", html=True), name="templates")
 
 
-@api_app.post('/BlockUser')
+@api_app.post("/BlockUser,{email}")
 def BlockUser(email: str, db: Session = Depends(get_db_users())):
     user_to_block = db.query(User).filter(User.Email == email).first()
     if user_to_block is None:
@@ -227,7 +276,6 @@ def LogIn(user: dict, db: Session = Depends(get_db_users())):
                 "city": userlogin.City,
                 "role": userlogin.Role,
             }}
-        print(user_details)
         return JSONResponse(user_details)
     else:
         raise HTTPException(status_code=401, detail="Invalid password")
