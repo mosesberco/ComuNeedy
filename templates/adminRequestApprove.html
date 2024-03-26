@@ -175,12 +175,12 @@
         }
         async function approveRequest(requestId) {
             try {
-                const response = await fetch(`/approve_request/${requestId}`, {
+                const response = await fetch(`/api/approve_request/${requestId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ isApproved: true })
+                    //body: JSON.stringify({ isApproved: true })
                 });
                 if (response.ok) {
                     console.log('Request approved successfully');
