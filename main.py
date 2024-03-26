@@ -58,25 +58,25 @@ async def lifespan(api_app: FastAPI):
 
 
 def get_db_users():
-    def dependcy():
+    def dependency():
         db = SessionLocalUsers()
         try:
             yield db
         finally:
             db.close()
 
-    return dependcy
+    return dependency
 
 
 def get_db_requests():
-    def dependcy():
+    def dependency():
         db = SessionLocalRequests()
         try:
             yield db
         finally:
             db.close()
 
-    return dependcy
+    return dependency
 
 
 class User(Base):
@@ -146,7 +146,7 @@ def approve_request(request_id: int, db: Session = Depends(get_db_requests())):
     request.Is_approved = True
     db.commit()
     # db.refresh(request)
-    return {"message": "aprroved successfully"}
+    return {"message": "approved successfully"}
 
 
 @api_app.get('/approved_requests')
@@ -177,28 +177,31 @@ def get_approved_requests():
     finally:
         session.close()
 
+
 @api_app.get('/users_list')
 def get_users_list():
     db = SessionLocalUsers()
     try:
-        users_data = db.query(User).filter(User.IsBlocked ==False).all()
+        users_data = db.query(User).filter(User.IsBlocked == False).all()
         users_list = []
         for user in users_data:
             user_dict = {
                 "First_name": user.First_name,
                 "Last_name": user.Last_name,
-                "Email":user.Email,
+                "Email": user.Email,
                 "created_at": user.created_at,
-                "Address":user.Address,
-                "City":user.City,
-                "Age":user.Age,
-                "Proficiency":user.Proficiency,
-                "Role":user.Role
+                "Address": user.Address,
+                "City": user.City,
+                "Age": user.Age,
+                "Proficiency": user.Proficiency,
+                "Role": user.Role
             }
             users_list.append(user_dict)
         return users_list
     finally:
         db.close()
+
+
 @api_app.get('/unapproved_requests')
 def get_unapproved_requests():
     session = SessionLocalRequests()
@@ -256,7 +259,7 @@ def BlockUser(email: str, db: Session = Depends(get_db_users())):
     if user_to_block is None:
         raise HTTPException(status_code=404, detail="User not found")
     user_to_block.IsBlocked = True
-    return JSONResponse({'message': 'User Blocked Succesfully !'})
+    return JSONResponse({'message': 'User Blocked Successfully !'})
 
 
 @api_app.post('/login')
@@ -303,6 +306,18 @@ async def get_user_info(email: str, db: Session = Depends(get_db_users())):
         "City": user.City,
     }
 
+
+@app.patch("/change_password/user/")
+async def change_user_password(email: str, password: str, db: Session = Depends(get_db_users())):
+    # Fetch user information from the database
+    user = db.query(User).filter(User.Email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    user.Password = password
+    db.commit()
+
+    return JSONResponse({'message': 'Password Changed Successfully !'})
 
 # until to here...
 
