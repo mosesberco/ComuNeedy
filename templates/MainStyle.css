@@ -303,6 +303,131 @@ section .button button:hover {
   width: 80%;
 }
 
+/* Last Section */
+footer {
+  flex-shrink: 0;
+  background-color: #fff;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+}
+
+footer .content {
+  max-width: 1250px;
+  margin: auto;
+  padding: 30px 40px 40p 40px;
+}
+
+footer .content .top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px; /* Increase the margin-bottom value to push the icons further down */
+}
+footer .content .top .media-icons {
+  display: flex;
+  margin-top: 100px; /* Increase the margin-top value to push the icons further down */
+}
+footer .content .top .logo-details .logo {
+  width: 250px; /* Adjust the width as needed */
+  margin-right: 100px; /* Add margin for spacing */
+  margin-top: 20px; /* Add margin to move the logo down */
+}
+
+.content .top .logo-details {
+  color: #000;
+  font-size: 30px;
+}
+.content .top .media-icons {
+  display: flex;
+}
+.content .top .media-icons a {
+  height: 40px;
+  width: 40px;
+  margin: 0 8px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 40px;
+  color: #fff;
+  font-size: 17px;
+  text-decoration: none;
+  transition: all 0.4s ease;
+}
+footer .media-icons a:nth-child(1) {
+  background: #4267b2;
+}
+footer .media-icons a:nth-child(1):hover {
+  color: #4267b2;
+  background: #fff;
+}
+footer .media-icons a:nth-child(2) {
+  background: #1da1f2;
+}
+footer .media-icons a:nth-child(2):hover {
+  color: #4267b2;
+  background: #fff;
+}
+footer .media-icons a:nth-child(3) {
+  background: #e1306c;
+}
+footer .media-icons a:nth-child(3):hover {
+  color: #e1306c;
+  background: #fff;
+}
+footer .media-icons a:nth-child(4) {
+  background: #0077b5;
+}
+footer .media-icons a:nth-child(4):hover {
+  color: #0077b5;
+  background: #fff;
+}
+footer .media-icons a:nth-child(5) {
+  background: #ff0000;
+}
+footer .media-icons a:nth-child(5):hover {
+  color: #ff0000;
+  background: #fff;
+}
+/* Stay in Touch */
+footer .content .stay-in-touch {
+  color: #000; /* Text color */
+  margin-top: 10px; /* Adjust margin-top to reduce the gap */
+  padding-bottom: 10px; /* Add padding at the bottom for separation */
+}
+
+footer .content .stay-in-touch p {
+  height: 100px;
+  font-size: 18px; /* Font size for the title */
+  font-weight: bold; /* Bold font weight for the title */
+  margin-bottom: 5px; /* Reduce bottom margin for the title */
+}
+
+footer .content .stay-in-touch .icons {
+  display: flex; /* Display icons in a row */
+  margin-bottom: 5px; /* Add margin bottom for separation */
+}
+
+footer .content .stay-in-touch .icons a {
+  margin-right: 5px; /* Reduce space between icons */
+}
+
+footer .content .stay-in-touch .icons a:last-child {
+  margin-right: 0; /* Remove margin from last icon */
+}
+
+footer .content .stay-in-touch a {
+  color: #000; /* Link color */
+  text-decoration: none; /* Remove underline from links */
+}
+
+footer .content .stay-in-touch a:hover {
+  text-decoration: underline; /* Underline links on hover */
+}
+footer .content .stay-in-touch ul li {
+  margin-bottom: 5px; /* Bottom margin for each list item */
+  margin-top: 5px; /* Adjust margin-top to bring the list closer to the title */
+}
+
 /*Scroll up button*/
 .scroll-btn i {
   position: fixed;
