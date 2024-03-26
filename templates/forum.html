@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .new-thread {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .new-thread textarea {
+            width: 300px;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+
+        .threads {
+            width: 100%;
+        }
+
+        .thread {
+            list-style-type: none;
+            padding: 10px;
+            background-color: #f2f2f2;
+            margin-bottom: 10px;
+        }
+        
+        .comment {
+            margin-left: 15px;
+        }
+
+        /* Updated CSS for top and bottom sections */
+        .top {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .bottom {
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start; /* Added alignment */
+        }
+    </style>
+</head>
+<body>
+    <div class="top">
+        <div class="top-bar">
+            <h1>ComuNeedy Forum</h1>
+        </div>
+
+        <div class = "new-thread">
+            <h2>Raise new thread</h2>
+            <textarea id="threadInput"></textarea>
+            <button onclick="addThread()">Submit</button>
+        </div>
+    </div>
+    <div class="bottom">
+        <div class="threads">
+            <ol id="threadList"></ol>
+        </div>
+    </div>
+    <script>
+        function addThread() {
+            const threadInput = document.getElementById('threadInput');
+            const threadText = threadInput.value.trim();
+
+            if (threadText !== '') {
+                const threadList = document.getElementById('threadList');
+                const newThread = document.createElement('li');
+                newThread.className = 'thread';
+                newThread.textContent = threadText;
+
+                const commentInput = document.createElement('input');
+                commentInput.type = 'text';
+                commentInput.placeholder = 'Add a comment';
+
+                const commentButton = document.createElement('button');
+                commentButton.textContent = 'Comment';
+                commentButton.onclick = function() {
+                    addComment(newThread, commentInput.value.trim());
+                    commentInput.value = '';
+                };
+
+                const commentList = document.createElement('ul');
+                newThread.appendChild(document.createTextNode(' '));
+                newThread.appendChild(commentInput);
+                newThread.appendChild(commentButton);
+                newThread.appendChild(commentList);
+
+                threadList.appendChild(newThread);
+                threadInput.value = '';
+            }
+        }
+
+        function addComment(thread, commentText) {
+            if (commentText !== '') {
+                const commentList = thread.querySelector('ul');
+                const newComment = document.createElement('li');
+                newComment.className = 'comment';
+                newComment.textContent = commentText;
+                commentList.appendChild(newComment);
+            }
+        }
+    </script>
+</body>
+</html>

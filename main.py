@@ -149,6 +149,16 @@ def approve_request(request_id: int, db: Session = Depends(get_db_requests())):
     return {"message": "aprroved successfully"}
 
 
+@api_app.delete("/deny_request/{request_id}", )
+def deny_request(request_id: int, db: Session = Depends(get_db_requests())):
+    request = db.query(Request).filter(Request.id_Request == request_id).first()
+    if request is None:
+        raise HTTPException(status_code=404, detail=f"Request with ID {request_id} not found")
+    db.delete(request)
+    db.commit()
+    return {"message": "Request denied and removed successfully"}
+
+
 @api_app.get('/approved_requests')
 def get_approved_requests():
     session = SessionLocalRequests()
