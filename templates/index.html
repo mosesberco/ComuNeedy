@@ -36,7 +36,15 @@
 
     <button class="button" id="loginButton">Login</button>
   </nav>
+
+  <div class="announcement-box" id="announcementBox">
+    <div class="announcement-content">
+      <h2>ComuuNeedy Announcements</h2>
+      <p>27/03/2024 - The Service is under construction. We're working hard to imporove our website and will be ready soon to launch.</p>
+    </div>
+  </div>
 </header>
+
 
 <!--Home-->
 <section class="home">
@@ -276,8 +284,15 @@
            window.location.href = 'createUser.html';
        });
      })
+     
  
  </script>
+ <script>
+  document.getElementById('announcementBox').addEventListener('click', function() {
+      this.classList.toggle('hidden'); // Toggle the hidden class
+  });
+</script>
+
  
  </body>
  </html>
