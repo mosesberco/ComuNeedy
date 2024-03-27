@@ -16,6 +16,32 @@ a {
   width: 200px;
   margin-top: 5px;
 }
+.announcement-box {
+  align-items: center;
+  display: block;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px;
+  margin: 20px auto;
+  max-width: 600px;
+  cursor: pointer; /* Add cursor pointer to indicate it's clickable */
+}
+
+.announcement-content h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.announcement-content p {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.announcement-box.hidden {
+  display: none; /* Hide the announcement box when it has the hidden class */
+}
 
 .header {
   position: fixed;
@@ -393,6 +419,10 @@ footer .content .stay-in-touch {
   color: #000; /* Text color */
   margin-top: 10px; /* Adjust margin-top to reduce the gap */
   padding-bottom: 10px; /* Add padding at the bottom for separation */
+  margin: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 footer .content .stay-in-touch p {
@@ -418,6 +448,10 @@ footer .content .stay-in-touch .icons a:last-child {
 footer .content .stay-in-touch a {
   color: #000; /* Link color */
   text-decoration: none; /* Remove underline from links */
+  margin: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 footer .content .stay-in-touch a:hover {
@@ -426,6 +460,7 @@ footer .content .stay-in-touch a:hover {
 footer .content .stay-in-touch ul li {
   margin-bottom: 5px; /* Bottom margin for each list item */
   margin-top: 5px; /* Adjust margin-top to bring the list closer to the title */
+  list-style: none;
 }
 
 /*Scroll up button*/
