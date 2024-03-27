@@ -17,12 +17,34 @@
             align-items: center;
             justify-content: flex-start;
             min-height: 100vh;
+            background: url('./pic/background_main_pic.jpg');
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .new-thread-btn {
+            width: 100%;
+            height: 30px;
+            background: #a39f9f;
+            border: none;
+            outline: none;
+            border-radius: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+            cursor: pointer;
+            font-size: 16px;
+            color: #2c2626;
+            font-weight: 600;
+            margin-bottom: 16px;
         }
 
         .top-bar {
             text-align: center;
             margin-bottom: 20px;
             width: 100%;
+        }
+
+        h2 {
+            color: white;
         }
 
         .new-thread {
@@ -45,12 +67,46 @@
         .thread {
             list-style-type: none;
             padding: 10px;
-            background-color: #f2f2f2;
+            background-color: #87888f;
             margin-bottom: 10px;
+            border-radius: 7%;
+            margin-right: 20px;
+            margin-left: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        li {
+            margin-left: 19px;
         }
         
-        .comment {
-            margin-left: 15px;
+        .comment-input-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        input {
+            justify-content: center;
+            align-items: center;
+        }
+
+        .comment-button {
+            width: 120px;
+            height: 30px;
+            background: #eeeeee;
+            border: none;
+            outline: none;
+            border-radius: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+            cursor: pointer;
+            font-size: 16px;
+            color: #2c2626;
+            font-weight: 600;
+            margin-left: 10px;
         }
 
         /* Updated CSS for top and bottom sections */
@@ -78,7 +134,7 @@
         <div class = "new-thread">
             <h2>Raise new thread</h2>
             <textarea id="threadInput"></textarea>
-            <button onclick="addThread()">Submit</button>
+            <button class="new-thread-btn" onclick="addThread()">Submit</button>
         </div>
     </div>
     <div class="bottom">
@@ -87,31 +143,88 @@
         </div>
     </div>
     <script>
-        function addThread() {
+
+
+        const userDetails =JSON.parse(sessionStorage.getItem('user'));
+        const fullName = `${userDetails.name} ${userDetails.last_name}`;
+        
+
+        async function addThread(userName = fullName) {
             const threadInput = document.getElementById('threadInput');
             const threadText = threadInput.value.trim();
 
-            if (threadText !== '') {
+            if (threadText !== '' && userName !== '') {
                 const threadList = document.getElementById('threadList');
                 const newThread = document.createElement('li');
                 newThread.className = 'thread';
-                newThread.textContent = threadText;
+
+                const threadTextContainer = document.createElement('div');
+                threadTextContainer.className = 'thread-text-container';
+
+                const threadTextElement = document.createElement('div');
+                threadTextElement.textContent = threadText;
+                threadTextContainer.appendChild(threadTextElement);
+
+                const threadUserElement = document.createElement('p');
+                threadUserElement.textContent = `Posted by: ${userName}`;
+                threadTextContainer.appendChild(threadUserElement);
+
+                newThread.appendChild(threadTextContainer);
+                
+
+                const user_json = {};
+                user_json['user_email']= userDetails.email;
+                user_json['First_name']= userDetails.name;
+                user_json['Last_name']= userDetails.last_name;
+                user_json['thread']= threadText;
+                console.log(user_json);
+                try {
+                const response = await fetch('/api/new_thread/',//await - waiting for the server to response
+                {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json',
+                },
+                    body: JSON.stringify(user_json),
+                });
+                if (!response.ok) {
+                    const errorMessage = await response.text();
+                    alert(`Error: ${errorMessage}`);
+                } else {
+                    const result = await response.json();
+                    displaySuccessMessage(`Success: ${result.message}`);
+                }
+                }
+                catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred udi 1234. Please try again.');
+                }
+
+
+
+
+
+
+                const commentInputContainer = document.createElement('div');
+                commentInputContainer.className = 'comment-input-container';
 
                 const commentInput = document.createElement('input');
                 commentInput.type = 'text';
                 commentInput.placeholder = 'Add a comment';
 
                 const commentButton = document.createElement('button');
+                commentButton.className = 'comment-button';
                 commentButton.textContent = 'Comment';
                 commentButton.onclick = function() {
-                    addComment(newThread, commentInput.value.trim());
+                    addComment(newThread, commentInput.value.trim(), userName);
                     commentInput.value = '';
                 };
 
+                commentInputContainer.appendChild(commentInput);
+                commentInputContainer.appendChild(commentButton);
+
                 const commentList = document.createElement('ul');
-                newThread.appendChild(document.createTextNode(' '));
-                newThread.appendChild(commentInput);
-                newThread.appendChild(commentButton);
+                newThread.appendChild(commentInputContainer);
                 newThread.appendChild(commentList);
 
                 threadList.appendChild(newThread);
@@ -119,15 +232,71 @@
             }
         }
 
-        function addComment(thread, commentText) {
+        async function addComment(thread, commentText, userName = fullName) {
             if (commentText !== '') {
                 const commentList = thread.querySelector('ul');
                 const newComment = document.createElement('li');
                 newComment.className = 'comment';
-                newComment.textContent = commentText;
+
+                const commentTextContainer = document.createElement('div');
+                commentTextContainer.className = 'comment-text-container';
+
+                const commentTextElement = document.createElement('div');
+                commentTextElement.textContent = commentText;
+                commentTextContainer.appendChild(commentTextElement);
+
+                const commentUserElement = document.createElement('p');
+                commentUserElement.textContent = `Posted by: ${userName}`;
+                commentTextContainer.appendChild(commentUserElement);
+
+
+
+                const user_json = {};
+                user_json['user_email']= userDetails.email;
+                user_json['First_name']= userDetails.name;
+                user_json['Last_name']= userDetails.last_name;
+                user_json['thread']= commentText;
+                console.log(user_json);
+                try {
+                const response = await fetch('/api/new_thread/',//await - waiting for the server to response
+                {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json',
+                },
+                    body: JSON.stringify(user_json),
+                });
+                if (!response.ok) {
+                    const errorMessage = await response.text();
+                    alert(`Error: ${errorMessage}`);
+                } else {
+                    const result = await response.json();
+                    displaySuccessMessage(`Success: ${result.message}`);
+                }
+                }
+                catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred udi 1234. Please try again.');
+                }
+
+
+
+
+
+                newComment.appendChild(commentTextContainer);
                 commentList.appendChild(newComment);
             }
         }
+
+
+        function displaySuccessMessage(message) {
+                const successMessage = document.getElementById('successMessage');
+                successMessage.textContent = message;
+                successMessage.style.display = 'block';
+        }
+
+
+
     </script>
 </body>
 </html>
