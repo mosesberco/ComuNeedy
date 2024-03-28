@@ -24,7 +24,8 @@
         <a href="./newRequest.html" class="nav_link">Request</a>
         <a href="#" class="nav_link">Profile</a>
         <a href="#" class="nav_link">Contact</a>
-        <a href="./adminRequestApprove.html" class="nav_link">Approve Requests</a>
+        <div id="navbar"></div>
+
         <a href="./FAQ.html" class="nav_link">About</a>
         <a href="./forum.html" class="nav_link">Forum</a>
       </li>
@@ -209,6 +210,24 @@
    </div>
  
  <script>
+        var isAdmin = false;
+        const userDetails =JSON.parse(sessionStorage.getItem('user'));
+        if (userDetails){
+            console.log(userDetails.role)
+            if (userDetails.role == 'admin')
+            {
+                isAdmin = true;
+            }
+            console.log(isAdmin)
+
+        }
+     if (isAdmin) {
+                var link = document.createElement("a");
+                link.href = "./adminRequestApprove.html";
+                link.className = "nav_link";
+                link.textContent = "Approve Requests";
+                document.getElementById("navbar").appendChild(link);
+            }
      window.addEventListener('load', function() {
         const loggedInUser = sessionStorage.getItem('user');
         const loginButton = document.getElementById('loginButton');
