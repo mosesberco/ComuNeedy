@@ -12,7 +12,6 @@ from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 from contextlib import asynccontextmanager
 from fastapi.responses import FileResponse
-import random
 
 id_Request = 0
 
@@ -41,25 +40,27 @@ api_app.add_middleware(
 
 # adding the relative path
 DATABASE_User_URL = "sqlite:///Users.db"
-#DATABASE_Request_URL = "sqlite:///Request.db"
+# DATABASE_Request_URL = "sqlite:///Request.db"
 engine_users = create_engine(DATABASE_User_URL, connect_args={"check_same_thread": False})
-#engine_requests = create_engine(DATABASE_Request_URL, connect_args={"check_same_thread": False})
+# engine_requests = create_engine(DATABASE_Request_URL, connect_args={"check_same_thread": False})
 
 Base = declarative_base()
-SessionLocalUsers = sessionmaker(autocommit=False, autoflush=False, bind=engine_users)
-#SessionLocalRequests = sessionmaker(autocommit=False, autoflush=False, bind=engine_requests)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine_users)
+
+
+# SessionLocalRequests = sessionmaker(autocommit=False, autoflush=False, bind=engine_requests)
 
 
 @asynccontextmanager
 async def lifespan(api_app: FastAPI):
     Base.metadata.create_all(bind=engine_users)
-    #Base.metadata.create_all(bind=engine_requests)
+    # Base.metadata.create_all(bind=engine_requests)
     yield
 
 
-def get_db_users():
+def get_db():
     def dependcy():
-        db = SessionLocalUsers()
+        db = SessionLocal()
         try:
             yield db
         finally:
@@ -95,6 +96,18 @@ class User(Base):
     IsBlocked = Column(Boolean, default=False)
 
 
+class Thread(Base):
+    __tablename__ = "treads"
+    id_tread = Column(Integer, primary_key=True, autoincrement=True)
+    information = Column(String, default=None)
+    Created_at = Column(DateTime, default=func.now())
+    isThread = Column(Boolean)
+    owner = Column(String)
+    email = Column(String)
+    role = Column(String)
+    connect_to = Column(Integer, default=0)
+
+
 class Request(Base):
     __tablename__ = "Request"
     id_Request = Column(Integer, primary_key=True, autoincrement=True)
@@ -116,7 +129,7 @@ def email_in_db(email: str, db: Session):
 
 
 @api_app.post("/add_user")
-async def AddUser(user_data: dict, db: Session = Depends(get_db_users())):
+async def AddUser(user_data: dict, db: Session = Depends(get_db())):
     print("addUser activate")
     First_name = user_data.get("First_name")
     Last_name = user_data.get("Last_name")
@@ -139,7 +152,7 @@ async def AddUser(user_data: dict, db: Session = Depends(get_db_users())):
 
 
 @api_app.put("/approve_request/{request_id}", )
-def approve_request(request_id: int, db: Session = Depends(get_db_users())):
+def approve_request(request_id: int, db: Session = Depends(get_db())):
     request = db.query(User).filter(Request.id_Request == request_id).first()
     print(request)
     if request is None:
@@ -151,7 +164,7 @@ def approve_request(request_id: int, db: Session = Depends(get_db_users())):
 
 
 @api_app.delete("/deny_request/{request_id}", )
-def deny_request(request_id: int, db: Session = Depends(get_db_users())):
+def deny_request(request_id: int, db: Session = Depends(get_db())):
     request = db.query(Request).filter(Request.id_Request == request_id).first()
     if request is None:
         raise HTTPException(status_code=404, detail=f"Request with ID {request_id} not found")
@@ -160,9 +173,23 @@ def deny_request(request_id: int, db: Session = Depends(get_db_users())):
     return {"message": "Request denied and removed successfully"}
 
 
+@api_app.post('/new_thread')
+def create_new_thread(thread_data: dict, db: Session = Depends(get_db())):
+    if 'id' in thread_data and 'isthread' in thread_data:
+        new_thread = Thread(owner=thread_data.get('owner'), information=thread_data.get('thread'),
+                            email=thread_data.get('email'), role=thread_data.get('role'),
+                            connect_to=thread_data.get('id'), isThread=thread_data.get('isthread'))
+    else:
+        new_thread = Thread(owner=thread_data.get('owner'), information=thread_data.get('thread'), isThread=True,
+                            email=thread_data.get('email'), role=thread_data.get('role'))
+    db.add(new_thread)
+    db.commit()
+    return ({"message": "Thread added successfully", "id": new_thread.id_tread})
+
+
 @api_app.get('/approved_requests')
 def get_approved_requests():
-    session = SessionLocalUsers()
+    session = SessionLocal()
     try:
         # Query to fetch unapproved requests
         approved_requests = session.query(Request).filter(Request.Is_approved == True).all()
@@ -188,31 +215,34 @@ def get_approved_requests():
     finally:
         session.close()
 
+
 @api_app.get('/users_list')
 def get_users_list():
-    db = SessionLocalUsers()
+    db = SessionLocal()
     try:
-        users_data = db.query(User).filter(User.IsBlocked ==False).all()
+        users_data = db.query(User).filter(User.IsBlocked == False).all()
         users_list = []
         for user in users_data:
             user_dict = {
                 "First_name": user.First_name,
                 "Last_name": user.Last_name,
-                "Email":user.Email,
+                "Email": user.Email,
                 "created_at": user.created_at,
-                "Address":user.Address,
-                "City":user.City,
-                "Age":user.Age,
-                "Proficiency":user.Proficiency,
-                "Role":user.Role
+                "Address": user.Address,
+                "City": user.City,
+                "Age": user.Age,
+                "Proficiency": user.Proficiency,
+                "Role": user.Role
             }
             users_list.append(user_dict)
         return users_list
     finally:
         db.close()
+
+
 @api_app.get('/unapproved_requests')
 def get_unapproved_requests():
-    session = SessionLocalUsers()
+    session = SessionLocal()
     try:
         # Query to fetch unapproved requests
         unapproved_requests = session.query(Request).filter(Request.Is_approved == False).all()
@@ -240,7 +270,7 @@ def get_unapproved_requests():
 
 
 @api_app.post("/change_password")
-async def change_user_password(data: dict, db: Session = Depends(get_db_users())):
+async def change_user_password(data: dict, db: Session = Depends(get_db())):
     # Fetch user information from the database
     user = db.query(User).filter(User.Email == data.get('email')).first()
     if not user:
@@ -251,8 +281,9 @@ async def change_user_password(data: dict, db: Session = Depends(get_db_users())
 
     return JSONResponse({'message': 'Password Changed Successfully !'})
 
+
 @api_app.post("/new_request")
-async def NewRequest(user_data: dict, db: Session = Depends(get_db_users())):
+async def NewRequest(user_data: dict, db: Session = Depends(get_db())):
     user_email = user_data.get("email", "")
     first_name = user_data.get("name", "")
     last_name = user_data.get("last_name", "")
@@ -274,7 +305,7 @@ app.mount("/", StaticFiles(directory="templates", html=True), name="templates")
 
 
 @api_app.post("/BlockUser,{email}")
-def BlockUser(email: str, db: Session = Depends(get_db_users())):
+def BlockUser(email: str, db: Session = Depends(get_db())):
     user_to_block = db.query(User).filter(User.Email == email).first()
     if user_to_block is None:
         raise HTTPException(status_code=404, detail="User not found")
@@ -283,7 +314,7 @@ def BlockUser(email: str, db: Session = Depends(get_db_users())):
 
 
 @api_app.post('/login')
-def LogIn(user: dict, db: Session = Depends(get_db_users())):
+def LogIn(user: dict, db: Session = Depends(get_db())):
     userlogin = db.query(User).filter(User.Email == user.get("Email")).first()
     if userlogin is None:
         raise HTTPException(status_code=404, detail="Sorry, we don't recognize this email.")
@@ -313,7 +344,7 @@ async def read_login():
 # added code by Ariel - Check over it.
 # func to get user's name and city to fetch it in JS.
 @app.get("/api/user/")
-async def get_user_info(email: str, db: Session = Depends(get_db_users())):
+async def get_user_info(email: str, db: Session = Depends(get_db())):
     # Fetch user information from the database
     user = db.query(User).filter(User.Email == email).first()
 

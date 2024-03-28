@@ -141,10 +141,11 @@
         <div class="threads">
             <ol id="threadList"></ol>
         </div>
+        <p id="successMessage" style="display: none; color: #333;"></p>
     </div>
     <script>
 
-
+        var id_thread=0;
         const userDetails =JSON.parse(sessionStorage.getItem('user'));
         const fullName = `${userDetails.name} ${userDetails.last_name}`;
         
@@ -158,6 +159,7 @@
                 const newThread = document.createElement('li');
                 newThread.className = 'thread';
 
+
                 const threadTextContainer = document.createElement('div');
                 threadTextContainer.className = 'thread-text-container';
 
@@ -170,13 +172,15 @@
                 threadTextContainer.appendChild(threadUserElement);
 
                 newThread.appendChild(threadTextContainer);
+                const userDetails =JSON.parse(sessionStorage.getItem('user'));
                 
 
                 const user_json = {};
                 user_json['user_email']= userDetails.email;
-                user_json['First_name']= userDetails.name;
-                user_json['Last_name']= userDetails.last_name;
+                user_json['owner']= userDetails.name+" "+userDetails.last_name;
                 user_json['thread']= threadText;
+                user_json['role'] = userDetails.role;
+
                 console.log(user_json);
                 try {
                 const response = await fetch('/api/new_thread/',//await - waiting for the server to response
@@ -193,12 +197,15 @@
                 } else {
                     const result = await response.json();
                     displaySuccessMessage(`Success: ${result.message}`);
+                    id_thread = result.id;
+                    console.log(id_thread)
                 }
                 }
                 catch (error) {
                     console.error('Error:', error);
                     alert('An error occurred udi 1234. Please try again.');
                 }
+                newThread.id = id_thread.toString();;
 
 
 
@@ -208,6 +215,7 @@
                 const commentInputContainer = document.createElement('div');
                 commentInputContainer.className = 'comment-input-container';
 
+
                 const commentInput = document.createElement('input');
                 commentInput.type = 'text';
                 commentInput.placeholder = 'Add a comment';
@@ -216,7 +224,7 @@
                 commentButton.className = 'comment-button';
                 commentButton.textContent = 'Comment';
                 commentButton.onclick = function() {
-                    addComment(newThread, commentInput.value.trim(), userName);
+                    addComment(newThread, commentInput.value.trim(), userName, newThread.id);
                     commentInput.value = '';
                 };
 
@@ -232,7 +240,7 @@
             }
         }
 
-        async function addComment(thread, commentText, userName = fullName) {
+        async function addComment(thread, commentText, userName = fullName, idthread) {
             if (commentText !== '') {
                 const commentList = thread.querySelector('ul');
                 const newComment = document.createElement('li');
@@ -253,9 +261,11 @@
 
                 const user_json = {};
                 user_json['user_email']= userDetails.email;
-                user_json['First_name']= userDetails.name;
-                user_json['Last_name']= userDetails.last_name;
+                user_json['owner']= userDetails.name+" "+userDetails.last_name ;
                 user_json['thread']= commentText;
+                user_json['id'] = idthread;
+                user_json['isthread'] = false;
+                user_json['role'] = userDetails.role;
                 console.log(user_json);
                 try {
                 const response = await fetch('/api/new_thread/',//await - waiting for the server to response
@@ -271,7 +281,7 @@
                     alert(`Error: ${errorMessage}`);
                 } else {
                     const result = await response.json();
-                    displaySuccessMessage(`Success: ${result.message}`);
+                    displaySuccessMessage(result.message);
                 }
                 }
                 catch (error) {
