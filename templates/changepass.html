@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Password</title>
+</head>
+<body>
+    <h1>Change Your Password</h1>
+    <form id="change-password-form">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
+
+        <label for="password">New Password:</label>
+        <input type="password" id="password" name="password"
+
+               title="Password must be at least 8 characters long."
+        >
+        <br><br>
+
+        <button type="submit">Change Password</button>
+    </form>
+
+    <script>
+     const form = document.getElementById('change-password-form');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault(); // Prevent the form from submitting and refreshing the page
+
+      // Get the form data
+      const formData = {
+        email: form.elements.email.value,
+        password: form.elements.password.value
+      };
+
+      try {
+        // Send the form data to the server
+        console.log(formData)
+        const response = await fetch('/api/change_password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        // Handle the server response
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data.message); // Log the success message
+          // Optionally, you can reset the form or display a success message to the user
+        } else {
+          console.error('Error changing password:', response.status);
+          // Optionally, you can display an error message to the user
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        // Optionally, you can display an error message to the user
+      }
+    });
+    </script>
+</body>
+</html>

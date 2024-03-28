@@ -41,19 +41,19 @@ api_app.add_middleware(
 
 # adding the relative path
 DATABASE_User_URL = "sqlite:///Users.db"
-DATABASE_Request_URL = "sqlite:///Request.db"
+#DATABASE_Request_URL = "sqlite:///Request.db"
 engine_users = create_engine(DATABASE_User_URL, connect_args={"check_same_thread": False})
-engine_requests = create_engine(DATABASE_Request_URL, connect_args={"check_same_thread": False})
+#engine_requests = create_engine(DATABASE_Request_URL, connect_args={"check_same_thread": False})
 
 Base = declarative_base()
 SessionLocalUsers = sessionmaker(autocommit=False, autoflush=False, bind=engine_users)
-SessionLocalRequests = sessionmaker(autocommit=False, autoflush=False, bind=engine_requests)
+#SessionLocalRequests = sessionmaker(autocommit=False, autoflush=False, bind=engine_requests)
 
 
 @asynccontextmanager
 async def lifespan(api_app: FastAPI):
     Base.metadata.create_all(bind=engine_users)
-    Base.metadata.create_all(bind=engine_requests)
+    #Base.metadata.create_all(bind=engine_requests)
     yield
 
 
@@ -68,7 +68,7 @@ def get_db_users():
     return dependcy
 
 
-def get_db_requests():
+'''def get_db_requests():
     def dependcy():
         db = SessionLocalRequests()
         try:
@@ -76,7 +76,7 @@ def get_db_requests():
         finally:
             db.close()
 
-    return dependcy
+    return dependcy'''
 
 
 class User(Base):
@@ -139,8 +139,8 @@ async def AddUser(user_data: dict, db: Session = Depends(get_db_users())):
 
 
 @api_app.put("/approve_request/{request_id}", )
-def approve_request(request_id: int, db: Session = Depends(get_db_requests())):
-    request = db.query(Request).filter(Request.id_Request == request_id).first()
+def approve_request(request_id: int, db: Session = Depends(get_db_users())):
+    request = db.query(User).filter(Request.id_Request == request_id).first()
     if request is None:
         raise HTTPException(status_code=404, detail=f"Request with ID {request_id} not found")
     request.Is_approved = True
@@ -149,9 +149,19 @@ def approve_request(request_id: int, db: Session = Depends(get_db_requests())):
     return {"message": "aprroved successfully"}
 
 
+@api_app.delete("/deny_request/{request_id}", )
+def deny_request(request_id: int, db: Session = Depends(get_db_users())):
+    request = db.query(Request).filter(Request.id_Request == request_id).first()
+    if request is None:
+        raise HTTPException(status_code=404, detail=f"Request with ID {request_id} not found")
+    db.delete(request)
+    db.commit()
+    return {"message": "Request denied and removed successfully"}
+
+
 @api_app.get('/approved_requests')
 def get_approved_requests():
-    session = SessionLocalRequests()
+    session = SessionLocalUsers()
     try:
         # Query to fetch unapproved requests
         approved_requests = session.query(Request).filter(Request.Is_approved == True).all()
@@ -201,7 +211,7 @@ def get_users_list():
         db.close()
 @api_app.get('/unapproved_requests')
 def get_unapproved_requests():
-    session = SessionLocalRequests()
+    session = SessionLocalUsers()
     try:
         # Query to fetch unapproved requests
         unapproved_requests = session.query(Request).filter(Request.Is_approved == False).all()
@@ -228,8 +238,20 @@ def get_unapproved_requests():
         session.close()
 
 
+@api_app.post("/change_password")
+async def change_user_password(data: dict, db: Session = Depends(get_db_users())):
+    # Fetch user information from the database
+    user = db.query(User).filter(User.Email == data.get('email')).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    user.Password = data.get('password')
+    db.commit()
+
+    return JSONResponse({'message': 'Password Changed Successfully !'})
+
 @api_app.post("/new_request")
-async def NewRequest(user_data: dict, db: Session = Depends(get_db_requests())):
+async def NewRequest(user_data: dict, db: Session = Depends(get_db_users())):
     user_email = user_data.get("email", "")
     first_name = user_data.get("name", "")
     last_name = user_data.get("last_name", "")
