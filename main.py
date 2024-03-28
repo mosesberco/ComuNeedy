@@ -141,6 +141,7 @@ async def AddUser(user_data: dict, db: Session = Depends(get_db_users())):
 @api_app.put("/approve_request/{request_id}", )
 def approve_request(request_id: int, db: Session = Depends(get_db_users())):
     request = db.query(User).filter(Request.id_Request == request_id).first()
+    print(request)
     if request is None:
         raise HTTPException(status_code=404, detail=f"Request with ID {request_id} not found")
     request.Is_approved = True
