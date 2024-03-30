@@ -374,9 +374,10 @@ async def get_user_info(email: str, db: Session = Depends(get_db())):
     }
 
 
-@app.post("/forgot_password/")
-def forgot_password(email: dict= Body(...)):
-    if email_in_db(email.get("email")):
+@api_app.post("/forgot_password/{email}")
+def forgot_password(email: str, db : Session= Depends(get_db())):
+    if db.query(User).filter(User.Email==email):
+        print("is ok")
         return {"message": "user found Succesfully"}
     '''else:
         raise HTTPException(status_code=404, detail="User not found")'''
