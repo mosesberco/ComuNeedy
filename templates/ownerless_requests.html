@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ownerless Requests</title>
+    <link rel="icon" type="image/x-icon" href="./pic/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Roboto+Slab:wght@300&display=swap" rel="stylesheet">
+    <style>
+        <style>
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background-color: #826afb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #requestContainer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .requestCube {
+            width: 300px;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            align-items: center;
+            justify-content: center;
+            margin: 10px;
+        }
+
+        img {
+            width: 500px;
+            display: block;
+            margin: 0 auto 20px auto;
+            margin-top: 20px;
+        }
+
+        /* Style for the name */
+        p {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+
+        /* Style for the approve button */
+        .requestCube .approveButton {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .requestCube .denyButton {
+            padding: 8px 16px;
+            background-color: #c71313;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        #fetchRequestsBtn {
+            padding: 8px 16px;
+            background-color: #1e524b;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .button-container {
+            margin-top: 20px; /* Adjust as needed */
+        }
+
+    </style>
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <a href="./index.html"> <img src="./pic/comuneedy_logo.png" alt="logo"> </a>
+        </div>
+        <div class="button-container">
+            <button id="fetchRequestsBtn" onclick="displayOwnerlessRequests()">Fetch Ownerless Requests</button>
+        </div>
+        <div id="requestsContainer"></div>
+    </div>
+
+    <script>
+        const userDetails =JSON.parse(sessionStorage.getItem('user'));
+        async function OwnerlessRequests() {
+            try {
+                const response = await fetch('/api/ownerless_requests');
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching ownerless requests:', error);
+                return [];
+            }
+        }
+
+        async function displayOwnerlessRequests() {
+            const requestsContainer = document.getElementById('requestsContainer');
+            const requestsData = await OwnerlessRequests();
+
+            // Clear previous data
+            requestsContainer.innerHTML = '';
+
+            // Display requests data
+            requestsData.forEach(request => {
+                const requestCube = document.createElement('div');
+                requestCube.classList.add('requestCube');
+                requestCube.innerHTML = `
+                    <p class="name">${request.First_name} ${request.Last_name}</p>
+                    <p class="details">${request.Information}</p>
+                    <p>${request.Additional_Req}</p>
+                    <p class="city">${request.City}</p>
+                    <p>${request.user_email}</p>
+                    <p>Created at: ${request.Created_at}</p>
+                    <button class="takeRequestButton" onclick="takeRequest(${request.id_Request})">Take this Request</button>
+                `;
+                requestsContainer.appendChild(requestCube);
+            });
+
+            const fetchRequestsBtn = document.getElementById('fetchRequestsBtn');
+            fetchRequestsBtn.style.display = 'none';
+        }
+
+        async function takeRequest(request_id){
+            data = {"user_email":userDetails.email, "request_id":request_id};
+            try {
+            const response = await fetch('/api/connecting_request_to_user',{
+            method: 'PUT',
+            headers: {
+                        'Content-Type': 'application/json'
+                    },
+            body: JSON.stringify(data)
+                   });
+            if (response.ok){
+            console.log('Request approved successfully');
+                    // Refresh the requests display
+                    //displayRequests();
+                    }
+            }
+            catch (error) {
+                console.error('Error approving request:', error);
+            }
+        }
+
+
+
+        // Attach event listener to the button
+        const fetchRequestsBtn = document.getElementById('fetchRequestsBtn');
+        fetchRequestsBtn.addEventListener('click', displayOwnerlessRequests);
+    </script>
+</body>
+</html>

@@ -211,12 +211,16 @@
  
  <script>
         var isAdmin = false;
+        var UserNotAdmin = false;
         const userDetails =JSON.parse(sessionStorage.getItem('user'));
         if (userDetails){
             console.log(userDetails.role)
             if (userDetails.role == 'admin')
             {
                 isAdmin = true;
+            }
+            else{
+            UserNotAdmin = true;
             }
             console.log(isAdmin)
 
@@ -227,6 +231,19 @@
                 link.className = "nav_link";
                 link.textContent = "Approve Requests";
                 document.getElementById("navbar").appendChild(link);
+            }
+     else if (UserNotAdmin) {
+                var link = document.createElement("a");
+                link.href = "./ownerless_requests.html";
+                link.className = "nav_link";
+                link.textContent = "Get your request now!";
+                document.getElementById("navbar").appendChild(link);
+                var link = document.createElement("a");
+                link.href = "./My_requests.html";
+                link.className = "nav_link";
+                link.textContent = "My requests";
+                document.getElementById("navbar").appendChild(link);
+
             }
      window.addEventListener('load', function() {
         const loggedInUser = sessionStorage.getItem('user');

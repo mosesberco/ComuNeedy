@@ -123,6 +123,7 @@ class Request(Base):
     Is_approved = Column(Boolean, default=False)
     connect_to = Column(String, default=None)
     # user = relationship("User", back_populates="requests")
+    is_Done = Column(Boolean, default=False)
 
 
 def email_in_db(email: str, db: Session = Depends(get_db())):
@@ -152,11 +153,65 @@ async def AddUser(user_data: dict, db: Session = Depends(get_db())):
     return {"message": "User added successfully"}
 
 
-@api_app.post("/ownerless_requests")
-def ownerless_requests(db: Session = Depends(get_db())):
-    requests_list = db.query(Request).filter(Request.connect_to != None and Request.Is_approved == True).all()
-    for request in requests_list:
-        pass
+@api_app.put("/complete_request/{request_id}")
+def change_request_to_done(request_id: int, db: Session = Depends(get_db())):
+    request = db.query(User).filter(Request.id_Request == request_id).first()
+    request.is_Done = True
+    db.commit()
+    return {"message": "request done successfully"}
+
+
+@api_app.get("/My_request/{user_email}")
+def get_user_requests(user_email: str):
+    session = SessionLocal()
+    try:
+        MyRequests = session.query(Request).filter(Request.connect_to == user_email).all()
+        requests_data = []
+        for request in MyRequests:
+            request_dict = {
+                'id_Request': request.id_Request,
+                'First_name': request.First_name,
+                'Last_name': request.Last_name,
+                'Information': request.Information,
+                'Availability': request.Availability,
+                'Additional_Req': request.Additional_Req,
+                'City': request.City,
+                'user_email': request.user_email,
+                'Created_at': str(request.Created_at)
+            }
+            requests_data.append(request_dict)
+        return requests_data
+
+    finally:
+        session.close()
+
+
+@api_app.get("/ownerless_requests")
+def ownerless_requests():
+    session = SessionLocal()
+    try:
+        # Query to fetch unapproved requests
+        ownerless_request = session.query(Request).filter(Request.connect_to == 0).all()
+
+        # Convert the requests to a list of dictionaries
+        requests_data = []
+        for request in ownerless_request:
+            request_dict = {
+                'id_Request': request.id_Request,
+                'First_name': request.First_name,
+                'Last_name': request.Last_name,
+                'Information': request.Information,
+                'Availability': request.Availability,
+                'Additional_Req': request.Additional_Req,
+                'City': request.City,
+                'user_email': request.user_email,
+                'Created_at': str(request.Created_at)
+            }
+            requests_data.append(request_dict)
+
+        return requests_data
+    finally:
+        session.close()
 
 
 @api_app.put("/approve_request/{request_id}", )
@@ -173,7 +228,7 @@ def approve_request(request_id: int, db: Session = Depends(get_db())):
 
 @api_app.put("/connecting_request_to_user/", )
 def connect_request(data: dict, db: Session = Depends(get_db())):
-    request = db.query(Request).filter(Request.id_Request == data.get('request_id'))
+    request = db.query(Request).filter(Request.id_Request == data.get("request_id")).first()
     request.connect_to = data.get("user_email")
     db.commit()
     return {"message": "connecting successfully"}
@@ -308,7 +363,7 @@ async def NewRequest(user_data: dict, db: Session = Depends(get_db())):
     availability = user_data.get("Availability", "")
     additional_Req = user_data.get("Additional_Req", "")
     new_request = Request(First_name=first_name, Last_name=last_name, City=city, Information=information,
-                          Availability=availability, Additional_Req=additional_Req, user_email=user_email)
+                          Availability=availability, Additional_Req=additional_Req, user_email=user_email, connect_to=0)
     db.add(new_request)
     db.commit()
     return {"message": "Request added successfully"}
@@ -375,8 +430,8 @@ async def get_user_info(email: str, db: Session = Depends(get_db())):
 
 
 @api_app.post("/forgot_password/{email}")
-def forgot_password(email: str, db : Session= Depends(get_db())):
-    if db.query(User).filter(User.Email==email):
+def forgot_password(email: str, db: Session = Depends(get_db())):
+    if db.query(User).filter(User.Email == email):
         print("is ok")
         return {"message": "user found Succesfully"}
     '''else:
