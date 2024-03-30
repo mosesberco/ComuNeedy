@@ -42,6 +42,7 @@ const submitBtnClick = () => {
     // Remove spaces from generated captcha for comparison
     message.innerText = "Entered captcha is correct";
     message.style.color = "#826afb";
+    window.location.href = "index.html"
   } else {
     message.innerText = "Entered captcha is not correct";
     message.style.color = "#FF2525";

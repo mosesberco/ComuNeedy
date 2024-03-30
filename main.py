@@ -121,6 +121,7 @@ class Request(Base):
     user_email = Column(String, ForeignKey('Users.Email'))
     Created_at = Column(DateTime, default=func.now())
     Is_approved = Column(Boolean, default=False)
+    connect_to = Column(String, default=None)
     # user = relationship("User", back_populates="requests")
 
 
@@ -150,7 +151,11 @@ async def AddUser(user_data: dict, db: Session = Depends(get_db())):
     db.commit()
     return {"message": "User added successfully"}
 
-
+@api_app.post("/ownerless_requests")
+def ownerless_requests(db: Session = Depends(get_db())):
+    requests_list = db.query(Request).filter(Request.connect_to!=None and Request.Is_approved==True).all()
+    for request in requests_list:
+        pass
 @api_app.put("/approve_request/{request_id}", )
 def approve_request(request_id: int, db: Session = Depends(get_db())):
     request = db.query(User).filter(Request.id_Request == request_id).first()
@@ -161,6 +166,14 @@ def approve_request(request_id: int, db: Session = Depends(get_db())):
     db.commit()
     # db.refresh(request)
     return {"message": "aprroved successfully"}
+
+
+@api_app.put("/connecting_request_to_user/", )
+def connect_request(data: dict, db: Session = Depends(get_db())):
+    request = db.query(Request).filter(Request.id_Request == data.get('request_id'))
+    request.connect_to = data.get("user_email")
+    db.commit()
+    return {"message": "connecting successfully"}
 
 
 @api_app.delete("/deny_request/{request_id}", )
@@ -322,7 +335,7 @@ def LogIn(user: dict, db: Session = Depends(get_db())):
         userlogin.Last_login = func.now()
         user_details = {
             "message": "Logging in...",
-            "nexturl": "index.html",
+            "nexturl": "Genrator.html",
             "user": {
                 "email": userlogin.Email,
                 "name": userlogin.First_name,
