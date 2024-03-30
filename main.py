@@ -125,7 +125,7 @@ class Request(Base):
     # user = relationship("User", back_populates="requests")
 
 
-def email_in_db(email: str, db: Session):
+def email_in_db(email: str, db: Session = Depends(get_db())):
     return db.query(User).filter(User.Email == email).first() is not None
 
 
@@ -151,11 +151,14 @@ async def AddUser(user_data: dict, db: Session = Depends(get_db())):
     db.commit()
     return {"message": "User added successfully"}
 
+
 @api_app.post("/ownerless_requests")
 def ownerless_requests(db: Session = Depends(get_db())):
-    requests_list = db.query(Request).filter(Request.connect_to!=None and Request.Is_approved==True).all()
+    requests_list = db.query(Request).filter(Request.connect_to != None and Request.Is_approved == True).all()
     for request in requests_list:
         pass
+
+
 @api_app.put("/approve_request/{request_id}", )
 def approve_request(request_id: int, db: Session = Depends(get_db())):
     request = db.query(User).filter(Request.id_Request == request_id).first()
@@ -371,7 +374,13 @@ async def get_user_info(email: str, db: Session = Depends(get_db())):
     }
 
 
-# until to here...
+@app.post("/forgot_password/")
+def forgot_password(email: dict= Body(...)):
+    if email_in_db(email.get("email")):
+        return {"message": "user found Succesfully"}
+    '''else:
+        raise HTTPException(status_code=404, detail="User not found")'''
+
 
 if __name__ == '__main__':
     uvicorn.run(app, port=8080, host='0.0.0.0')
