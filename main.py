@@ -108,6 +108,13 @@ class Thread(Base):
     connect_to = Column(Integer, default=0)
 
 
+class Rating(Base):
+    __tablename__ = "Rating"
+    request_id = Column(Integer, primary_key=True)
+    rating = Column(Integer)
+    comment = Column(String)
+
+
 class Request(Base):
     __tablename__ = "Request"
     id_Request = Column(Integer, primary_key=True, autoincrement=True)
@@ -128,6 +135,14 @@ class Request(Base):
 
 def email_in_db(email: str, db: Session = Depends(get_db())):
     return db.query(User).filter(User.Email == email).first() is not None
+
+
+@api_app.post("/update_review")
+def add_review(data: dict, db: Session = Depends(get_db())):
+    review = Rating(request_id=data.get("request_id"), rating=data.get("stars"), comment=data.get("comment"))
+    db.add(review)
+    db.commit()
+    return {"message": "review added successfully"}
 
 
 @api_app.post("/add_user")

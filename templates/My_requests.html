@@ -151,6 +151,8 @@
             if (response.ok){
             console.log('Request approved successfully');
             requestElement.remove();
+            sessionStorage.setItem('request', JSON.stringify({"request_id":request_id}));
+            window.location.href = "Review.html";
                     // Refresh the requests display
                     //displayRequests();
                     }

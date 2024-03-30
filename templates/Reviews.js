@@ -15,3 +15,33 @@ stars.forEach((star, index1) => {
     });
   });
 });
+
+const userDetails =JSON.parse(sessionStorage.getItem('user'));
+document.getElementById('name').value = userDetails.name;
+document.getElementById('email').value = userDetails.email;
+const requestDetails = JSON.parse(sessionStorage.getItem('request'));
+async function send_review(){
+
+    const comment = document.getElementById('comment').value;
+
+  // Count the number of active stars
+  const stars = document.querySelectorAll(".stars i.active").length;
+  const reviewData = {
+    "name": userDetails.name + " "+userDetails.last_name,
+    "email": userDetails.email,
+    "comment": comment,
+    "stars": stars,
+    "request_id": requestDetails.request_id
+  };
+  const response = await fetch("/api/update_review",{
+            method: 'POST',
+            headers: {
+                        'Content-Type': 'application/json'
+                    },
+            body: JSON.stringify(reviewData)
+                   });
+  if (response.ok)
+  {
+  console.log("added")}
+  document.getElementById('comment').value = '';
+}
