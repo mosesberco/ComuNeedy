@@ -42,6 +42,10 @@ async function send_review(){
                    });
   if (response.ok)
   {
-  console.log("added")}
+  console.log("added");
+  window.location.href = "My_requests.html";
   document.getElementById('comment').value = '';
+  console.log("go back");
+  window.location.href = "My_requests.html";
+  }
 }

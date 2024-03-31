@@ -18,6 +18,15 @@ function calculateRating(data) {
 
   return { total_rating, rating_based_on_stars };
 }
+async function getRating() {
+  const response = await fetch("/api/avg_reviews");
+  if (response.ok) {
+    const ratingData = await response.json();
+    return ratingData;
+  } else {
+    throw new Error("Failed to fetch rating data");
+  }
+}
 
 function generateRatingHTML(data) {
   let total_rating = 0;
@@ -38,14 +47,13 @@ function generateRatingHTML(data) {
                   }%;"></div>
               </div>
               <p>${rating.count.toLocaleString()}</p>
-          </div> 
+          </div>
       `;
     ratingHTML += rating_progress;
   });
 
   return ratingHTML;
 }
-
 // Attach event listener to DOMContentLoaded
 document.addEventListener("DOMContentLoaded", function () {
   let data = [

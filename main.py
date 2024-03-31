@@ -170,7 +170,7 @@ async def AddUser(user_data: dict, db: Session = Depends(get_db())):
 
 @api_app.put("/complete_request/{request_id}")
 def change_request_to_done(request_id: int, db: Session = Depends(get_db())):
-    request = db.query(User).filter(Request.id_Request == request_id).first()
+    request = db.query(Request).filter(Request.id_Request == request_id).first()
     request.is_Done = True
     db.commit()
     return {"message": "request done successfully"}
@@ -180,7 +180,7 @@ def change_request_to_done(request_id: int, db: Session = Depends(get_db())):
 def get_user_requests(user_email: str):
     session = SessionLocal()
     try:
-        MyRequests = session.query(Request).filter(Request.connect_to == user_email).all()
+        MyRequests = session.query(Request).filter(Request.connect_to == user_email, Request.is_Done == False).all()
         requests_data = []
         for request in MyRequests:
             request_dict = {
@@ -227,6 +227,27 @@ def ownerless_requests():
         return requests_data
     finally:
         session.close()
+
+
+@api_app.get('/avg_reviews')
+def avg_rating():
+    try:
+        db = SessionLocal()
+        rating_dict = {}
+        rating_dict["0"] = len(db.query(Rating).filter(Rating.rating == 0).all())
+        rating_dict["1"] = len(db.query(Rating).filter(Rating.rating == 1).all())
+        rating_dict["2"] = len(db.query(Rating).filter(Rating.rating == 2).all())
+        rating_dict["3"] = len(db.query(Rating).filter(Rating.rating == 3).all())
+        rating_dict["4"] = len(db.query(Rating).filter(Rating.rating == 4).all())
+        rating_dict["5"] = len(db.query(Rating).filter(Rating.rating == 5).all())
+        average = sum(int(key) * value for key, value in rating_dict.items()) / sum(value for value in rating_dict.values())
+        rating_dict['avg'] = average
+        return rating_dict
+
+    except Exception as e:
+        print(e)
+    finally:
+        db.close()
 
 
 @api_app.put("/approve_request/{request_id}", )
