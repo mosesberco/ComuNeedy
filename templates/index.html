@@ -226,11 +226,19 @@
 
         }
      if (isAdmin) {
+                var navItem = document.querySelector(".nav_item");
                 var link = document.createElement("a");
                 link.href = "./adminRequestApprove.html";
                 link.className = "nav_link";
                 link.textContent = "Approve Requests";
                 document.getElementById("navbar").appendChild(link);
+                var space = document.createTextNode("\u00A0\u00A0"); // Unicode for two spaces
+                document.getElementById("navbar").appendChild(space);
+                var link2 = document.createElement("a");
+                link2.href = "./Block_user.html";
+                link2.className = "nav_link";
+                link2.textContent = "Block user";
+                navItem.appendChild(link2);
             }
      else if (UserNotAdmin) {
                 /*

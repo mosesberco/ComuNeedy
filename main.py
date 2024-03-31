@@ -253,7 +253,6 @@ def avg_rating():
 @api_app.put("/approve_request/{request_id}", )
 def approve_request(request_id: int, db: Session = Depends(get_db())):
     request = db.query(User).filter(Request.id_Request == request_id).first()
-    print(request)
     if request is None:
         raise HTTPException(status_code=404, detail=f"Request with ID {request_id} not found")
     request.Is_approved = True
@@ -411,20 +410,36 @@ app.mount("/api", api_app)
 app.mount("/", StaticFiles(directory="templates", html=True), name="templates")
 
 
-@api_app.post("/BlockUser,{email}")
-def BlockUser(email: str, db: Session = Depends(get_db())):
-    user_to_block = db.query(User).filter(User.Email == email).first()
-    if user_to_block is None:
+@api_app.post('/BlockUser')
+def BlockUser(email: dict, db: Session = Depends(get_db())):
+    user = db.query(User).filter(User.Email == email.get("email")).first()
+    if user is None:
         raise HTTPException(status_code=404, detail="User not found")
-    user_to_block.IsBlocked = True
+    user.IsBlocked = True
+    print("First Name:", user.First_name)
+    print("Last Name:", user.Last_name)
+    print("Email:", user.Email)
+    print("Created At:", user.created_at)
+    print("Password:", user.Password)
+    print("Address:", user.Address)
+    print("City:", user.City)
+    print("Age:", user.Age)
+    print("Last Login:", user.Last_login)
+    print("Proficiency:", user.Proficiency)
+    print("Role:", user.Role)
+    print("Is Blocked:", user.IsBlocked)
+    db.commit()
     return JSONResponse({'message': 'User Blocked Succesfully !'})
 
 
 @api_app.post('/login')
 def LogIn(user: dict, db: Session = Depends(get_db())):
     userlogin = db.query(User).filter(User.Email == user.get("Email")).first()
-    if userlogin is None:
+    if userlogin is None :
         raise HTTPException(status_code=404, detail="Sorry, we don't recognize this email.")
+    if userlogin.IsBlocked==True:
+        raise HTTPException(status_code=404, detail="User is Blocked nigga")
+
     if userlogin.Password == user.get("Password"):
         userlogin.Last_login = func.now()
         user_details = {
