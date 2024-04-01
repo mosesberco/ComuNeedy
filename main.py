@@ -206,7 +206,7 @@ def ownerless_requests():
     session = SessionLocal()
     try:
         # Query to fetch unapproved requests
-        ownerless_request = session.query(Request).filter(Request.connect_to == 0).all()
+        ownerless_request = session.query(Request).filter(Request.connect_to == 0, Request.Is_approved == True).all()
 
         # Convert the requests to a list of dictionaries
         requests_data = []
@@ -416,18 +416,6 @@ def BlockUser(email: dict, db: Session = Depends(get_db())):
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     user.IsBlocked = True
-    print("First Name:", user.First_name)
-    print("Last Name:", user.Last_name)
-    print("Email:", user.Email)
-    print("Created At:", user.created_at)
-    print("Password:", user.Password)
-    print("Address:", user.Address)
-    print("City:", user.City)
-    print("Age:", user.Age)
-    print("Last Login:", user.Last_login)
-    print("Proficiency:", user.Proficiency)
-    print("Role:", user.Role)
-    print("Is Blocked:", user.IsBlocked)
     db.commit()
     return JSONResponse({'message': 'User Blocked Succesfully !'})
 
