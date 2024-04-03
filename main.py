@@ -133,16 +133,33 @@ class Request(Base):
     is_Done = Column(Boolean, default=False)
 
 
+'''def email_in_db(email: str, db: Session = Depends(get_db())):
+    return db.query(User).filter(User.Email == email).first() is not None'''
 def email_in_db(email: str, db: Session = Depends(get_db())):
-    return db.query(User).filter(User.Email == email).first() is not None
+    user = db.query(User).filter(User.Email == email).first()
+    return user is not None
 
 
-@api_app.post("/update_review")
+'''@api_app.post("/update_review")
 def add_review(data: dict, db: Session = Depends(get_db())):
     review = Rating(request_id=data.get("request_id"), rating=data.get("stars"), comment=data.get("comment"))
     db.add(review)
     db.commit()
-    return {"message": "review added successfully"}
+    return {"message": "review added successfully"}'''
+
+@api_app.post("/update_review")
+def add_review(data: dict, db: Session = Depends(get_db)):
+    if not isinstance(data.get("request_id"), int):
+        return {"message": "invalid request ID"}
+
+    review = Rating(request_id=data.get("request_id"), rating=data.get("stars"), comment=data.get("comment"))
+    existing_review = db.query(Rating).filter(Rating.request_id == review.request_id).first()
+    if existing_review:
+        db.add(review)
+        db.commit()
+        return {"message": "review added successfully"}
+    else:
+        return {"message": "request ID not found"}
 
 
 @api_app.post("/add_user")
@@ -196,6 +213,9 @@ def get_user_requests(user_email: str):
             }
             requests_data.append(request_dict)
         return requests_data
+    #################complete code###############################
+    except BaseException as err:
+        pass
 
     finally:
         session.close()
@@ -386,6 +406,7 @@ async def change_user_password(data: dict, db: Session = Depends(get_db())):
     db.commit()
 
     return JSONResponse({'message': 'Password Changed Successfully !'})
+    # return {'message': 'Password Changed Successfully !'}
 
 
 @api_app.post("/new_request")
