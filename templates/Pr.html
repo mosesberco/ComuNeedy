@@ -13,9 +13,10 @@
     <link href="Pr.css" rel="stylesheet" />
   </head>
   <body>
-    <nav>
-      <div class="navbar">
-        <div class="logo"><a href="#">ComuNeedy</a></div>
+    <div class="header">
+      <nav>
+        <div class="navbar">
+          <div class="logo"><a href="#">ComuNeedy</a></div>
           <ul class="menu">
             <li><a href="./index.html">Home</a></li>
             <li><a href="./FAQ.html">FAQ</a></li>
@@ -24,10 +25,56 @@
             <li><a href="./index.html">LogOut</a></li>
           </ul>
         </div>
-      </div>
-    </nav>
-    <div class="button">
-       <a href="#Home"><i class="fas fa-arrow-up"></i></a>
+      </nav>
     </div>
+    <div class="main-content">
+      <div class="container">
+        <div id="ratingCube">
+          <!-- Remove the extra ratingWrapper div -->
+        </div>
+      </div>
+    </div>
+    <div class="button">
+      <a href="#Home"><i class="fas fa-arrow-up"></i></a>
+    </div>
+    <script>
+      async function get_all() {
+        try {
+          const response = await fetch(`/api/rating_and_request_data`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          const data = await response.json();
+          data.forEach(request => {
+            const rating = document.createElement('div');
+            rating.classList.add('ratingCube');
+            rating.innerHTML = `
+              <p class="name">Full name: ${request.First_name} ${request.Last_name}</p>
+              <p class="information">Information: ${request.Information}</p>
+              <p class="rating">Rating: ${request.rating}</p>
+              <p>Comment: ${request.comment}</p>
+            `;
+            document.getElementById('ratingCube').appendChild(rating);
+          });
+          if (response.ok) {
+            console.log('Request approved successfully');
+            console.log(response);
+            //requestElement.remove();
+            sessionStorage.setItem(
+              'request',
+              JSON.stringify({ request_id: request_id })
+            );
+            window.location.href = 'Review.html';
+          } else {
+            console.error('Error approving request:', response.statusText);
+          }
+        } catch (error) {
+          console.error('Error approving request:', error);
+        }
+      }
+      get_all();
+    </script>
   </body>
 </html>

@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Roboto+Slab:wght@300&display=swap" rel="stylesheet">
     <style>
-        <style>
 
 
         * {
@@ -113,7 +112,6 @@
         }
 
     </style>
-    </style>
 </head>
 <body>
     <div class="container">
@@ -179,7 +177,7 @@
                     <p class="city">${request.City}</p>
                     <p>${request.user_email}</p>
                     <p>Created at: ${request.Created_at}</p>
-                    <button class="takeRequestButton" onclick="completerequest(${request.id_Request},this.parentElement)">Take this Request</button>
+                    <button class="takeRequestButton" onclick="completerequest(${request.id_Request},this.parentElement)">Mark as done</button>
                 `;
                 requestsContainer.appendChild(requestCube);
             });
