@@ -153,13 +153,13 @@ def add_review(data: dict, db: Session = Depends(get_db())):
         return {"message": "invalid request ID"}
 
     review = Rating(request_id=data.get("request_id"), rating=data.get("stars"), comment=data.get("comment"))
-    # existing_review = db.query(Rating).filter(Rating.request_id == review.request_id).first()
+    #existing_review = db.query(Rating).filter(Rating.request_id == review.request_id).first()
     #if existing_review:
     db.add(review)
     db.commit()
     return {"message": "review added successfully"}
     #else:
-     #   return {"message": "request ID not found"}
+    #    return {"message": "request ID not found"}
 
 
 @api_app.post("/add_user")
@@ -272,7 +272,7 @@ def avg_rating():
 
 @api_app.put("/approve_request/{request_id}", )
 def approve_request(request_id: int, db: Session = Depends(get_db())):
-    request = db.query(Request).filter(Request.id_Request == request_id).first()
+    request = db.query(User).filter(Request.id_Request == request_id).first()
     if request is None:
         raise HTTPException(status_code=404, detail=f"Request with ID {request_id} not found")
     request.Is_approved = True
