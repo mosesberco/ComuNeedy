@@ -146,7 +146,7 @@ def add_review(data: dict, db: Session = Depends(get_db())):
     db.add(review)
     db.commit()
     return {"message": "review added successfully"}'''
-
+#--
 @api_app.post("/update_review")
 def add_review(data: dict, db: Session = Depends(get_db())):
     if not isinstance(data.get("request_id"), int):
