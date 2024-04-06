@@ -498,5 +498,27 @@ def forgot_password(email: str, db: Session = Depends(get_db())):
         raise HTTPException(status_code=404, detail="User not found")'''
 
 
+@api_app.get("/rating_and_request_data")
+def rating_and_request_data( db: Session = Depends(get_db())):
+    requests = db.query(Request).filter(Request.connect_to is not None).all()
+    data = []
+    for req in requests:
+        rating = db.query(Rating).filter(Rating.request_id == req.request_id).first()
+        user_details = db.query(User).filter(User.Email == req.connect_to).first()
+        
+
+
+        request_data = {
+            "First_name": user_details.First_name,
+            "Last_name": user_details.Last_name,
+            "Information": request.Information,
+            "rating": rating.rating if rating else None,
+            "comment": rating.comment if rating else None
+        }
+        data.append(request_data)
+    
+    return JSONResponse(data)
+
+
 if __name__ == '__main__':
     uvicorn.run(app, port=8080, host='0.0.0.0')

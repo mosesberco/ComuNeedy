@@ -29,5 +29,30 @@
     <div class="button">
        <a href="#Home"><i class="fas fa-arrow-up"></i></a>
     </div>
+
+    <script>
+
+      fetch('/api/rating_and_request_data')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('HTTP error ' + response.status);
+          }
+          return response.json();
+        })
+        .then(data => {
+          // Do something with the data
+          console.log(data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+
+
+
+    </script>
+
+
+
+
   </body>
 </html>
