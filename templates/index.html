@@ -26,7 +26,7 @@
         <a href="#" class="nav_link">Contact</a>
         <div id="navbar"></div>
 
-        <a href="./FAQ.html" class="nav_link">About</a>
+        <a href="./FAQ.html" class="nav_link">FAQs</a>
         <a href="./forum.html" class="nav_link">Forum</a>
       </li>
     </ul>
@@ -171,7 +171,7 @@
          <div class="topic">Have Any Idea?</div>
          <p>Your ideas shape our community's future. Whether it's a suggestion for improvement, a new initiative, or feedback on our services, we value your input and encourage you to share your ideas with us. Together, we can make ComuNeedy an even better place for everyone</p>
          <div class="button">
-          <a href="./createUser.html"><button>Chat With Us</button></a>
+          <a href="./Chat.html"><button>Chat With Us</button></a>
        </div>
       </div>
      </div>
@@ -241,20 +241,7 @@
                 navItem.appendChild(link2);
             }
      else if (UserNotAdmin) {
-                /*
-                var link1 = document.createElement("a");
-                link1.href = "./ownerless_requests.html";
-                link1.className = "nav_link";
-                link1.textContent = "Get your request now!";
-                document.getElementById("navbar").appendChild(link1);
-                var space = document.createTextNode("\u00A0\u00A0"); // Unicode for two spaces
-                document.getElementById("navbar").appendChild(space);
-                var link2 = document.createElement("a");
-                link2.href = "./My_requests.html";
-                link2.className = "nav_link";
-                link2.textContent = "My requests";
-                document.getElementById("navbar").appendChild(link2);
-                */
+                
                 var navItem = document.querySelector(".nav_item");
 
                 var link1 = document.createElement("a");
@@ -271,8 +258,6 @@
                 link2.className = "nav_link";
                 link2.textContent = "My requests";
                 navItem.appendChild(link2);
-
-
             }
      window.addEventListener('load', function() {
         const loggedInUser = sessionStorage.getItem('user');
