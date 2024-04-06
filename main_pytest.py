@@ -247,9 +247,3 @@ def test_forgot_password_fail(db: Session):
     response = main.get_user_info(email, db)
 
     assert type(response) is not dict
-
-
-
-
-
-
