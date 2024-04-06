@@ -25,7 +25,7 @@ def test_email_in_db_does_not_exist(db):
     result = main.email_in_db("test@example.com", db)
     assert result is False
 
-def test_add_review_request_id_exists(db: Session):
+def test_add_review_id_exists(db: Session):
     # Given
     request_id = 1
     rating = 5
@@ -178,7 +178,7 @@ def test_deny_request_test(db: Session):
     assert response == {"message": "Request denied and removed successfully"}
 
 def test_deny_request_test_fail(db: Session):
-    # Given existing data in db :
+    # Given not existing data in db :
     request_id = -1
 
     response = main.deny_request(request_id, db)
@@ -221,21 +221,7 @@ def test_get_unapproved_requests(db: Session):
 
     assert type(response) is list
 
-'''def test_change_user_password(db: Session):
-    # Given existing user's email in db
-    user_data = {"email": "udivak9@gmail.com", "password": "123456789"}
 
-    response = main.change_user_password(user_data, db)
-
-    assert response == {'message': 'Password Changed Successfully !'}'''
-
-'''def test_NewRequest(db: Session):
-    data = {"email": "email", "name": "name", "last_name": "last_name", "city": "city", "Information": "Information",
-            "Availability": "Availability", "Additional_Req": "Additional_Req"}
-
-    response = main.NewRequest(data, db)
-
-    assert response == {"message": "Request added successfully"}'''
 
 def test_BlockUser(db: Session):
     # Given existing user's email in db
@@ -245,27 +231,6 @@ def test_BlockUser(db: Session):
 
     assert type(response) is JSONResponse
 
-'''def test_LogIn(db: Session):
-    # Given an existing user email
-    test_user_data = {
-        "First_name": "Test",
-        "Last_name": "User",
-        "Email": "udivak9@gmail.com",
-        "Password": "123456789",
-        "City": "New York",
-        "Age": 30,
-        "Proficiency": "chef",
-        "Role": "volunteer",
-    }
-
-    response = main.LogIn(test_user_data, db)
-
-    assert type(response) is JSONResponse
-    # gets icorrect db, cant find user based on email - func raises exception'''
-
-'''def test_read_login():
-    response = main.read_login()
-    assert response is Path(__file__).parent / "templates" / "login.html"'''
 
 def test_get_user_info_fail(db: Session):
     # Given not existing email in db
@@ -282,9 +247,3 @@ def test_forgot_password_fail(db: Session):
     response = main.get_user_info(email, db)
 
     assert type(response) is not dict
-
-
-
-
-
-
