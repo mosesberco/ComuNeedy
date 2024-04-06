@@ -466,15 +466,9 @@ def LogIn(user: dict, db: Session = Depends(get_db())):
         raise HTTPException(status_code=401, detail="Invalid password")
 
 
-@app.get("/login")
-async def read_login():
-    html_path = Path(__file__).parent / "templates" / "login.html"
-    return FileResponse(html_path, media_type="text/html")
-
-
 # added code by Ariel - Check over it.
 # func to get user's name and city to fetch it in JS.
-@app.get("/api/user/")
+@api_app.get("/user/")
 async def get_user_info(email: str, db: Session = Depends(get_db())):
     # Fetch user information from the database
     user = db.query(User).filter(User.Email == email).first()
