@@ -29,5 +29,40 @@
     <div class="button">
        <a href="#Home"><i class="fas fa-arrow-up"></i></a>
     </div>
+
+    <script>
+       console.log("kaki")
+       async function get_all() {
+    try {
+        const response = await fetch(`/api/rating_and_request_data`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            console.log('Request approved successfully');
+            console.log(response)
+            requestElement.remove();
+            sessionStorage.setItem('request', JSON.stringify({"request_id":request_id}));
+            window.location.href = "Review.html";
+            // Refresh the requests display
+            //displayRequests();
+        } else {
+            console.error('Error approving request:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error approving request:', error);
+    }
+}
+
+        get_all()
+
+    </script>
+
+
+
+
   </body>
 </html>
