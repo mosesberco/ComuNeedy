@@ -1,22 +1,28 @@
-/*Import Google font - Poppins */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+/* Import Google font - Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
 }
 
 nav {
-  position: fixed;
-  left: 0;
-  top: 0;
   height: 75px;
   width: 100%;
   background: #367038;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
 }
+
 nav .navbar {
   display: flex;
   align-items: center;
@@ -26,12 +32,14 @@ nav .navbar {
   background: #367038;
   margin: auto;
 }
+
 nav .navbar .logo a {
   color: #fff;
   font-size: 27px;
   font-weight: 600;
   text-decoration: none;
 }
+
 nav .navbar .menu {
   display: flex;
 }
@@ -40,6 +48,7 @@ nav .navbar .menu {
   list-style: none;
   margin: 0 15px;
 }
+
 .navbar .menu li a {
   color: #fff;
   font-weight: 17px;
@@ -57,4 +66,73 @@ nav .navbar .menu {
   font-size: 18px;
   border-radius: 6px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+body {
+  height: 100vh;
+  background-color: #826afb;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.main-content {
+  margin-top: 100px; /* Add some margin to create space for the nav */
+}
+
+#ratingCube {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.ratingWrapper {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 25px;
+  width: 300px;
+  height: 300px;
+}
+
+.ratingCube {
+  width: 300px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: inline-block;
+  align-items: center;
+  justify-content: center;
+  margin: 25px;
+}
+
+img {
+  width: 500px;
+  display: block;
+  margin: 0 auto 20px auto;
+  margin-top: 20px;
+}
+
+/* Style for the name */
+p {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }

@@ -177,7 +177,7 @@
                     <p class="city">${request.City}</p>
                     <p>${request.user_email}</p>
                     <p>Created at: ${request.Created_at}</p>
-                    <button class="takeRequestButton" onclick="completerequest(${request.id_Request},this.parentElement)">Take this Request</button>
+                    <button class="takeRequestButton" onclick="completerequest(${request.id_Request},this.parentElement)">Mark as done</button>
                 `;
                 requestsContainer.appendChild(requestCube);
             });
