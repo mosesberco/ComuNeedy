@@ -500,10 +500,10 @@ def forgot_password(email: str, db: Session = Depends(get_db())):
 
 @api_app.get("/rating_and_request_data")
 def rating_and_request_data( db: Session = Depends(get_db())):
-    requests = db.query(Request).filter(Request.connect_to is not None).all()
+    requests = db.query(Request).filter(Request.is_Done ==1).all()
     data = []
     for req in requests:
-        rating = db.query(Rating).filter(Rating.request_id == req.request_id).first()
+        rating = db.query(Rating).filter(Rating.request_id == req.id_Request).first()
         user_details = db.query(User).filter(User.Email == req.connect_to).first()
         
 
@@ -511,7 +511,7 @@ def rating_and_request_data( db: Session = Depends(get_db())):
         request_data = {
             "First_name": user_details.First_name,
             "Last_name": user_details.Last_name,
-            "Information": request.Information,
+            "Information": req.Information,
             "rating": rating.rating if rating else None,
             "comment": rating.comment if rating else None
         }
