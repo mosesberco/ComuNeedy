@@ -27,6 +27,18 @@ async function getRating() {
     throw new Error("Failed to fetch rating data");
   }
 }
+async function get_data()
+{
+try {
+                const response = await fetch('/api/avg_reviews');
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching ownerless requests:', error);
+                return [];
+            }
+}
+
 
 function generateRatingHTML(data) {
   let total_rating = 0;
@@ -55,30 +67,33 @@ function generateRatingHTML(data) {
   return ratingHTML;
 }
 // Attach event listener to DOMContentLoaded
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
+    const avg_data = await get_data();
+    console.log(avg_data)
   let data = [
     {
       star: 5,
-      count: 99980,
+      count: avg_data['5'],
+
     },
     {
       star: 4,
-      count: 39300,
+      count: avg_data['4'],
     },
     {
       star: 3,
-      count: 20,
+      count: avg_data['3'],
     },
     {
       star: 2,
-      count: 10070,
+      count: avg_data['2'],
     },
     {
       star: 1,
-      count: 25020,
+      count: avg_data['1'],
     },
   ];
-
+    console.log(data);
   let ratingHTML = generateRatingHTML(data);
 
   let { total_rating, rating_based_on_stars } = calculateRating(data);
@@ -91,6 +106,6 @@ document.addEventListener("DOMContentLoaded", function () {
     total_rating.toLocaleString();
   document.querySelector(".rating__progress").innerHTML = ratingHTML;
   document.querySelector(".star-inner").style.width =
-    (rating_average / 5) * 100 + "%";
+    avg_data['avg'];
 });
 module.exports = { calculateRating, generateRatingHTML };
