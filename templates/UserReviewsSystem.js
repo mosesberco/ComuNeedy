@@ -106,6 +106,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     total_rating.toLocaleString();
   document.querySelector(".rating__progress").innerHTML = ratingHTML;
   document.querySelector(".star-inner").style.width =
-    avg_data['avg'];
+    (rating_average /5) * 100 + "%";
 });
 module.exports = { calculateRating, generateRatingHTML };
