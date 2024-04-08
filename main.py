@@ -272,7 +272,7 @@ def avg_rating():
 
 @api_app.put("/approve_request/{request_id}", )
 def approve_request(request_id: int, db: Session = Depends(get_db())):
-    request = db.query(User).filter(Request.id_Request == request_id).first()
+    request = db.query(Request).filter(Request.id_Request == request_id).first()
     if request is None:
         raise HTTPException(status_code=404, detail=f"Request with ID {request_id} not found")
     request.Is_approved = True
