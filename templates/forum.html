@@ -288,22 +288,116 @@
                     console.error('Error:', error);
                     alert('An error occurred udi 1234. Please try again.');
                 }
-
-
-
-
-
                 newComment.appendChild(commentTextContainer);
                 commentList.appendChild(newComment);
             }
         }
 
+        ////////////////////////////////////////////
 
+        function createThreadElement(thread, comments) {
+            const threadList = document.getElementById('threadList');
+            const newThread = document.createElement('li');
+            newThread.className = 'thread';
+
+            const threadTextContainer = document.createElement('div');
+            threadTextContainer.className = 'thread-text-container';
+
+            const threadTextElement = document.createElement('div');
+            threadTextElement.textContent = thread.comment;
+            threadTextContainer.appendChild(threadTextElement);
+
+            const threadUserElement = document.createElement('p');
+            threadUserElement.textContent = `Posted by: ${thread.owner}`;
+            threadTextContainer.appendChild(threadUserElement);
+
+            newThread.appendChild(threadTextContainer);
+
+            const commentInputContainer = document.createElement('div');
+            commentInputContainer.className = 'comment-input-container';
+
+            const commentInput = document.createElement('input');
+            commentInput.type = 'text';
+            commentInput.placeholder = 'Add a comment';
+
+            const commentButton = document.createElement('button');
+            commentButton.className = 'comment-button';
+            commentButton.textContent = 'Comment';
+            commentButton.onclick = function() {
+                addComment(newThread, commentInput.value.trim(), userName, newThread.id);
+                commentInput.value = '';
+            };
+
+            commentInputContainer.appendChild(commentInput);
+            commentInputContainer.appendChild(commentButton);
+
+            const commentList = document.createElement('ul');
+            comments.forEach(comment => {
+                const newComment = document.createElement('li');
+                newComment.className = 'comment';
+
+                const commentTextContainer = document.createElement('div');
+                commentTextContainer.className = 'comment-text-container';
+
+                const commentTextElement = document.createElement('div');
+                commentTextElement.textContent = comment.comment;
+                commentTextContainer.appendChild(commentTextElement);
+
+                const commentUserElement = document.createElement('p');
+                commentUserElement.textContent = `Posted by: ${comment.owner}`;
+                commentTextContainer.appendChild(commentUserElement);
+
+                newComment.appendChild(commentTextContainer);
+                commentList.appendChild(newComment);
+            });
+
+            newThread.appendChild(commentInputContainer);
+            newThread.appendChild(commentList);
+
+            threadList.appendChild(newThread);
+        }
+
+
+
+        async function getForum() {
+            try {
+                const response = await fetch(`/api/threads`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const data = await response.json();
+                console.log(data);
+
+                if (response.ok) {
+                    const threadList = document.getElementById('threadList');
+                    threadList.innerHTML = ''; // Clear the existing threads
+
+                    data.forEach(threadData => {
+                        const thread = threadData.thread;
+                        const comments = Object.values(threadData.comments);
+                        createThreadElement(thread, comments);
+                    });
+                } else {
+                    console.error('Error fetching threads:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching threads:', error);
+            }
+        }
+
+             
+
+        /////////////////////////////////////////////
         function displaySuccessMessage(message) {
                 const successMessage = document.getElementById('successMessage');
                 successMessage.textContent = message;
                 successMessage.style.display = 'block';
         }
+
+        window.addEventListener('DOMContentLoaded', getForum);
+
 
 
 

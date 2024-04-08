@@ -513,6 +513,30 @@ def rating_and_request_data( db: Session = Depends(get_db())):
     
     return JSONResponse(data)
 
+@api_app.get("/threads")
+def get_threads( db: Session = Depends(get_db())):
+    threads = db.query(Thread).filter(Thread.connect_to == 0).all()
+    data = []
+    for thread in threads:
+        tread_dict ={}
+        comment_data = {}
+        comments = db.query(Thread).filter(Thread.connect_to == thread.id_tread).all()
+        for i,comment in enumerate(comments):
+            comment_details = {
+                "comment": comment.information,
+                "owner": comment.owner
+            }
+            comment_data[str(i)] = comment_details
+
+        tread_dict['comments'] = comment_data
+        tread_dict['thread'] = {
+                "comment": thread.information,
+                "owner": thread.owner
+            }
+        data.append(tread_dict)
+    
+    return JSONResponse(data)
+
 
 if __name__ == '__main__':
     uvicorn.run(app, port=8080, host='0.0.0.0')
