@@ -447,7 +447,7 @@ def LogIn(user: dict, db: Session = Depends(get_db())):
     if userlogin is None :
         raise HTTPException(status_code=404, detail="Sorry, we don't recognize this email.")
     if userlogin.IsBlocked==True:
-        raise HTTPException(status_code=404, detail="User is Blocked nigga")
+        raise HTTPException(status_code=404, detail="User is Blocked")
 
     if userlogin.Password == user.get("Password"):
         userlogin.Last_login = func.now()
