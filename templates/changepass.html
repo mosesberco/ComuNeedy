@@ -133,6 +133,7 @@
         if (response.ok) {
           const data = await response.json();
           console.log(data.message); // Log the success message
+          alert("Password changed successfully.");
           // Optionally, you can reset the form or display a success message to the user
         } else {
           console.error('Error changing password:', response.status);

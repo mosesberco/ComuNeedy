@@ -178,10 +178,11 @@
             body: JSON.stringify(data)
                    });
             if (response.ok){
-            console.log('Request approved successfully');
+                console.log('Request approved successfully');
+                alert("request has been added successfully!");
                     // Refresh the requests display
                     //displayRequests();
-                    }
+                }
             }
             catch (error) {
                 console.error('Error approving request:', error);
