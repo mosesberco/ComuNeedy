@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum</title>
+    <link rel="icon" type="image/x-icon" href="./pic/favicon.png">
     <style>
         * {
             margin: 0;
@@ -38,6 +39,8 @@
         }
 
         .top-bar {
+            display: flex;
+            justify-content: center;
             text-align: center;
             margin-bottom: 20px;
             width: 100%;
@@ -123,12 +126,21 @@
             justify-content: flex-start;
             align-items: flex-start; /* Added alignment */
         }
+
+        img {
+            width: 250px;
+        }
+
+        h1 {
+            font-size: 40px;
+        }
     </style>
 </head>
 <body>
     <div class="top">
         <div class="top-bar">
-            <h1>ComuNeedy Forum</h1>
+            <a href="./index.html"><img src="./pic/comuneedy_logo.png"></a>
+            <h1>Forum</h1>
         </div>
 
         <div class = "new-thread">
